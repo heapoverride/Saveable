@@ -7,7 +7,7 @@ namespace Saveable
 {
     public class SaveableObject
     {
-        #region Overridable virtual methods
+        #region Overridable public virtual instance methods
         /// <summary>
         /// Read <see cref="SaveableObject"/> from <see cref="BinaryReader"/>
         /// </summary>
@@ -177,7 +177,7 @@ namespace Saveable
         }
         #endregion
 
-        #region Other public methods
+        #region Public instance methods
         /// <summary>
         /// Dump <see cref="SaveableObject"/> to a byte array
         /// </summary>
@@ -355,7 +355,7 @@ namespace Saveable
         }
         #endregion
 
-        #region Static methods
+        #region Static read methods
         /// <summary>
         /// Read <see cref="SaveableObject"/> from <see cref="BinaryReader"/>
         /// </summary>
@@ -443,7 +443,9 @@ namespace Saveable
                 yield return Read<T>(reader);
             }
         }
+        #endregion
 
+        #region Static write methods
         /// <summary>
         /// Write <see cref="SaveableObject"/> to <see cref="BinaryWriter"/>
         /// </summary>
