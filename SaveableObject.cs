@@ -182,18 +182,7 @@ namespace Saveable
         /// Dump <see cref="SaveableObject"/> to a byte array
         /// </summary>
         /// <returns></returns>
-        public byte[] GetBytes()
-        {
-            using (var stream = new MemoryStream())
-            {
-                using (var writer = new BinaryWriter(stream))
-                {
-                    Write(writer);
-
-                    return stream.ToArray();
-                }
-            }
-        }
+        public byte[] GetBytes() => GetBytes(this);
         #endregion
 
         #region Protected read methods
