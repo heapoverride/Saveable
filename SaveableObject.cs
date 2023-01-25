@@ -179,10 +179,10 @@ namespace Saveable
 
         #region Other public methods
         /// <summary>
-        /// Writes the <see cref="SaveableObject"/> to a byte array
+        /// Dump <see cref="SaveableObject"/> to a byte array
         /// </summary>
         /// <returns></returns>
-        public byte[] ToArray()
+        public byte[] GetBytes()
         {
             using (var stream = new MemoryStream())
             {
