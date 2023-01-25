@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace Saveable
+namespace SaveableDotNet
 {
-    public class SaveableString : SaveableObject
+    public class SaveableString : Saveable
     {
         /// <summary>
         /// Gets or sets the underlying <see cref="string"/> value

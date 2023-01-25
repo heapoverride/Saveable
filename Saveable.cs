@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Saveable
+namespace SaveableDotNet
 {
-    public class SaveableObject
+    public class Saveable
     {
         #region Overridable public virtual instance methods
         /// <summary>
-        /// Read <see cref="SaveableObject"/> from <see cref="BinaryReader"/>
+        /// Read <see cref="Saveable"/> from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         public virtual void Read(BinaryReader reader)
@@ -88,7 +88,7 @@ namespace Saveable
         }
 
         /// <summary>
-        /// Write <see cref="SaveableObject"/> to <see cref="BinaryWriter"/>
+        /// Write <see cref="Saveable"/> to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         public virtual void Write(BinaryWriter writer)
@@ -179,7 +179,7 @@ namespace Saveable
 
         #region Public instance methods
         /// <summary>
-        /// Dump <see cref="SaveableObject"/> to a byte array
+        /// Dump <see cref="Saveable"/> to a byte array
         /// </summary>
         /// <returns></returns>
         public byte[] GetBytes() => GetBytes(this);
@@ -357,25 +357,25 @@ namespace Saveable
 
         #region Static read methods
         /// <summary>
-        /// Read <see cref="SaveableObject"/> from <see cref="BinaryReader"/>
+        /// Read <see cref="Saveable"/> from <see cref="BinaryReader"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static T Read<T>(BinaryReader reader) where T : SaveableObject
+        public static T Read<T>(BinaryReader reader) where T : Saveable
         {
-            var saveableObject = Activator.CreateInstance<T>();
-            saveableObject.Read(reader);
-            return saveableObject;
+            var saveable = Activator.CreateInstance<T>();
+            saveable.Read(reader);
+            return saveable;
         }
 
         /// <summary>
-        /// Read <see cref="SaveableObject"/> from byte array
+        /// Read <see cref="Saveable"/> from byte array
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static T Read<T>(byte[] array) where T : SaveableObject
+        public static T Read<T>(byte[] array) where T : Saveable
         {
             using (var stream = new MemoryStream(array))
             {
@@ -387,12 +387,12 @@ namespace Saveable
         }
 
         /// <summary>
-        /// Read array of <see cref="SaveableObject"/> from <see cref="BinaryReader"/>
+        /// Read array of <see cref="Saveable"/> from <see cref="BinaryReader"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static T[] ReadArray<T>(BinaryReader reader) where T : SaveableObject
+        public static T[] ReadArray<T>(BinaryReader reader) where T : Saveable
         {
             var array = new T[reader.ReadInt32()];
 
@@ -405,12 +405,12 @@ namespace Saveable
         }
 
         /// <summary>
-        /// Read array of <see cref="SaveableObject"/> from byte array
+        /// Read array of <see cref="Saveable"/> from byte array
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static T[] ReadArray<T>(byte[] array) where T : SaveableObject
+        public static T[] ReadArray<T>(byte[] array) where T : Saveable
         {
             using (var stream = new MemoryStream(array))
             {
@@ -429,12 +429,12 @@ namespace Saveable
         }
 
         /// <summary>
-        /// Get an enumerator that can be used to iterate over array of <see cref="SaveableObject"/>
+        /// Get an enumerator that can be used to iterate over array of <see cref="Saveable"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static IEnumerable<T> GetEnumerator<T>(BinaryReader reader) where T : SaveableObject
+        public static IEnumerable<T> GetEnumerator<T>(BinaryReader reader) where T : Saveable
         {
             int length = reader.ReadInt32();
 
@@ -447,18 +447,18 @@ namespace Saveable
 
         #region Static write methods
         /// <summary>
-        /// Write <see cref="SaveableObject"/> to <see cref="BinaryWriter"/>
+        /// Write <see cref="Saveable"/> to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
-        /// <param name="saveableObject"></param>
-        public static void Write(BinaryWriter writer, SaveableObject saveableObject) => saveableObject.Write(writer);
+        /// <param name="saveable"></param>
+        public static void Write(BinaryWriter writer, Saveable saveable) => saveable.Write(writer);
 
         /// <summary>
-        /// Write array of <see cref="SaveableObject"/> to <see cref="BinaryWriter"/>
+        /// Write array of <see cref="Saveable"/> to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public static void Write(BinaryWriter writer, SaveableObject[] array)
+        public static void Write(BinaryWriter writer, Saveable[] array)
         {
             writer.Write((int)array.Length);
 
@@ -469,17 +469,17 @@ namespace Saveable
         }
 
         /// <summary>
-        /// Dump <see cref="SaveableObject"/> to a byte array
+        /// Dump <see cref="Saveable"/> to a byte array
         /// </summary>
-        /// <param name="saveableObject"></param>
+        /// <param name="saveable"></param>
         /// <returns></returns>
-        public static byte[] GetBytes(SaveableObject saveableObject)
+        public static byte[] GetBytes(Saveable saveable)
         {
             using (var stream = new MemoryStream())
             {
                 using (var writer = new BinaryWriter(stream))
                 {
-                    Write(writer, saveableObject);
+                    Write(writer, saveable);
                 }
 
                 return stream.ToArray();
@@ -487,17 +487,17 @@ namespace Saveable
         }
 
         /// <summary>
-        /// Dump array of <see cref="SaveableObject"/> to a byte array
+        /// Dump array of <see cref="Saveable"/> to a byte array
         /// </summary>
-        /// <param name="saveableObject"></param>
+        /// <param name="saveable"></param>
         /// <returns></returns>
-        public static byte[] GetBytes(SaveableObject[] saveableObject)
+        public static byte[] GetBytes(Saveable[] saveable)
         {
             using (var stream = new MemoryStream())
             {
                 using (var writer = new BinaryWriter(stream))
                 {
-                    Write(writer, saveableObject);
+                    Write(writer, saveable);
                 }
 
                 return stream.ToArray();
