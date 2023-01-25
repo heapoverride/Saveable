@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -378,6 +380,22 @@ namespace Saveable
             }
 
             return array;
+        }
+
+        /// <summary>
+        /// Get an enumerator that can be used to iterate over array of <see cref="SaveableObject"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetEnumerator<T>(BinaryReader reader) where T : SaveableObject
+        {
+            int length = reader.ReadInt32();
+
+            for (int i = 0; i < length; i++)
+            {
+                yield return Read<T>(reader);
+            }
         }
 
         /// <summary>
