@@ -177,6 +177,25 @@ namespace Saveable
         }
         #endregion
 
+        #region Other public methods
+        /// <summary>
+        /// Writes the <see cref="SaveableObject"/> to a byte array
+        /// </summary>
+        /// <returns></returns>
+        public byte[] ToArray()
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(stream))
+                {
+                    Write(writer);
+
+                    return stream.ToArray();
+                }
+            }
+        }
+        #endregion
+
         #region Protected read methods
         protected byte[] ReadByteArray(BinaryReader reader) => reader.ReadBytes(reader.ReadInt32());
 
@@ -362,6 +381,23 @@ namespace Saveable
         }
 
         /// <summary>
+        /// Read <see cref="SaveableObject"/> from byte array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static T Read<T>(byte[] array) where T : SaveableObject
+        {
+            using (var stream = new MemoryStream(array))
+            {
+                using (var reader = new BinaryReader(stream))
+                {
+                    return Read<T>(reader);
+                }
+            }
+        }
+
+        /// <summary>
         /// Read array of <see cref="SaveableObject"/> from <see cref="BinaryReader"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -377,6 +413,30 @@ namespace Saveable
             }
 
             return array;
+        }
+
+        /// <summary>
+        /// Read array of <see cref="SaveableObject"/> from byte array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static T[] ReadArray<T>(byte[] array) where T : SaveableObject
+        {
+            using (var stream = new MemoryStream(array))
+            {
+                using (var reader = new BinaryReader(stream))
+                {
+                    var _array = new T[reader.ReadInt32()];
+
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        _array[i] = Read<T>(reader);
+                    }
+
+                    return _array;
+                }
+            }
         }
 
         /// <summary>
@@ -407,13 +467,49 @@ namespace Saveable
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public static void WriteArray(BinaryWriter writer, SaveableObject[] array)
+        public static void Write(BinaryWriter writer, SaveableObject[] array)
         {
             writer.Write((int)array.Length);
 
             foreach (var obj in array)
             {
                 obj.Write(writer);
+            }
+        }
+
+        /// <summary>
+        /// Dump <see cref="SaveableObject"/> to a byte array
+        /// </summary>
+        /// <param name="saveableObject"></param>
+        /// <returns></returns>
+        public static byte[] GetBytes(SaveableObject saveableObject)
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(stream))
+                {
+                    Write(writer, saveableObject);
+                }
+
+                return stream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Dump array of <see cref="SaveableObject"/> to a byte array
+        /// </summary>
+        /// <param name="saveableObject"></param>
+        /// <returns></returns>
+        public static byte[] GetBytes(SaveableObject[] saveableObject)
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new BinaryWriter(stream))
+                {
+                    Write(writer, saveableObject);
+                }
+
+                return stream.ToArray();
             }
         }
         #endregion
