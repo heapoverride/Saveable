@@ -12,9 +12,8 @@ namespace Saveable
 
         public SaveableString() { }
 
-        public SaveableString(string value)
-        {
-            Value = value;
+        public SaveableString(string value) { 
+            Value = value; 
         }
 
         /// <summary>
@@ -31,14 +30,10 @@ namespace Saveable
 
         public override void Read(BinaryReader reader)
         {
-            Value = Encoding.UTF8.GetString(reader.ReadBytes(reader.ReadInt32()));
+            Value = ReadString(reader);
         }
 
-        public override void Write(BinaryWriter writer)
-        {
-            writer.Write((int)Value.Length);
-            writer.Write(Encoding.UTF8.GetBytes(Value));
-        }
+        public override void Write(BinaryWriter writer) => WriteString(writer, Value);
 
         public override string ToString() => Value;
     }
