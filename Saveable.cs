@@ -51,6 +51,18 @@ namespace SaveableDotNet
                     {
                         prop.SetValue(this, reader.ReadUInt64(), null);
                     }
+                    else if (prop.PropertyType == typeof(double))
+                    {
+                        prop.SetValue(this, reader.ReadDouble(), null);
+                    }
+                    else if (prop.PropertyType == typeof(float))
+                    {
+                        prop.SetValue(this, reader.ReadSingle(), null);
+                    }
+                    else if (prop.PropertyType == typeof(decimal))
+                    {
+                        prop.SetValue(this, reader.ReadDecimal(), null);
+                    }
 
                     // arrays of primitive data types
                     else if (prop.PropertyType == typeof(byte[]))
@@ -76,6 +88,18 @@ namespace SaveableDotNet
                     else if (prop.PropertyType == typeof(uint[]))
                     {
                         prop.SetValue(this, ReadUInt32Array(reader), null);
+                    }
+                    else if (prop.PropertyType == typeof(double[]))
+                    {
+                        prop.SetValue(this, ReadDoubleArray(reader), null);
+                    }
+                    else if (prop.PropertyType == typeof(float[]))
+                    {
+                        prop.SetValue(this, ReadFloatArray(reader), null);
+                    }
+                    else if (prop.PropertyType == typeof(decimal[]))
+                    {
+                        prop.SetValue(this, ReadDecimalArray(reader), null);
                     }
 
                     // throw error if type is not supported
@@ -132,6 +156,18 @@ namespace SaveableDotNet
                     {
                         writer.Write((ulong)value);
                     }
+                    else if (prop.PropertyType == typeof(double))
+                    {
+                        writer.Write((double)value);
+                    }
+                    else if (prop.PropertyType == typeof(float))
+                    {
+                        writer.Write((float)value);
+                    }
+                    else if (prop.PropertyType == typeof(decimal))
+                    {
+                        writer.Write((decimal)value);
+                    }
 
                     // arrays of primitive data types
                     else if (prop.PropertyType == typeof(byte[]))
@@ -165,6 +201,18 @@ namespace SaveableDotNet
                     else if (prop.PropertyType == typeof(ulong[]))
                     {
                         WriteUInt64Array(writer, (ulong[])value);
+                    }
+                    else if (prop.PropertyType == typeof(double[]))
+                    {
+                        WriteDoubleArray(writer, (double[])value);
+                    }
+                    else if (prop.PropertyType == typeof(float[]))
+                    {
+                        WriteFloatArray(writer, (float[])value);
+                    }
+                    else if (prop.PropertyType == typeof(decimal[]))
+                    {
+                        WriteDecimalArray(writer, (decimal[])value);
                     }
 
                     // throw error if type is not supported
@@ -273,6 +321,42 @@ namespace SaveableDotNet
 
             return array;
         }
+
+        protected double[] ReadDoubleArray(BinaryReader reader)
+        {
+            var array = new double[reader.ReadInt32()];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = reader.ReadDouble();
+            }
+
+            return array;
+        }
+
+        protected float[] ReadFloatArray(BinaryReader reader)
+        {
+            var array = new float[reader.ReadInt32()];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = reader.ReadSingle();
+            }
+
+            return array;
+        }
+
+        protected decimal[] ReadDecimalArray(BinaryReader reader)
+        {
+            var array = new decimal[reader.ReadInt32()];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = reader.ReadDecimal();
+            }
+
+            return array;
+        }
         #endregion
 
         #region Protected write methods
@@ -345,6 +429,36 @@ namespace SaveableDotNet
         }
 
         protected void WriteUInt64Array(BinaryWriter writer, ulong[] array)
+        {
+            writer.Write((uint)array.Length);
+
+            foreach (var value in array)
+            {
+                writer.Write(value);
+            }
+        }
+
+        protected void WriteDoubleArray(BinaryWriter writer, double[] array)
+        {
+            writer.Write((uint)array.Length);
+
+            foreach (var value in array)
+            {
+                writer.Write(value);
+            }
+        }
+
+        protected void WriteFloatArray(BinaryWriter writer, float[] array)
+        {
+            writer.Write((uint)array.Length);
+
+            foreach (var value in array)
+            {
+                writer.Write(value);
+            }
+        }
+
+        protected void WriteDecimalArray(BinaryWriter writer, decimal[] array)
         {
             writer.Write((uint)array.Length);
 
