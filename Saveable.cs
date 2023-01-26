@@ -18,94 +18,135 @@ namespace SaveableDotNet
             {
                 if (Attribute.IsDefined(prop, typeof(SaveableAttribute)))
                 {
-                    // primitive data types
-                    if (prop.PropertyType == typeof(byte))
+                    if (prop.PropertyType.IsArray)
                     {
-                        prop.SetValue(this, reader.ReadByte(), null);
-                    }
-                    else if (prop.PropertyType == typeof(string))
-                    {
-                        prop.SetValue(this, ReadString(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(short))
-                    {
-                        prop.SetValue(this, reader.ReadInt16(), null);
-                    }
-                    else if (prop.PropertyType == typeof(ushort))
-                    {
-                        prop.SetValue(this, reader.ReadUInt16(), null);
-                    }
-                    else if (prop.PropertyType == typeof(int))
-                    {
-                        prop.SetValue(this, reader.ReadInt32(), null);
-                    }
-                    else if (prop.PropertyType == typeof(uint))
-                    {
-                        prop.SetValue(this, reader.ReadUInt32(), null);
-                    }
-                    else if (prop.PropertyType == typeof(long))
-                    {
-                        prop.SetValue(this, reader.ReadInt64(), null);
-                    }
-                    else if (prop.PropertyType == typeof(ulong))
-                    {
-                        prop.SetValue(this, reader.ReadUInt64(), null);
-                    }
-                    else if (prop.PropertyType == typeof(double))
-                    {
-                        prop.SetValue(this, reader.ReadDouble(), null);
-                    }
-                    else if (prop.PropertyType == typeof(float))
-                    {
-                        prop.SetValue(this, reader.ReadSingle(), null);
-                    }
-                    else if (prop.PropertyType == typeof(decimal))
-                    {
-                        prop.SetValue(this, reader.ReadDecimal(), null);
-                    }
+                        if (prop.PropertyType.GetArrayRank() != 1) continue;
+                        // simple array type
 
-                    // arrays of primitive data types
-                    else if (prop.PropertyType == typeof(byte[]))
-                    {
-                        prop.SetValue(this, ReadByteArray(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(string[]))
-                    {
-                        prop.SetValue(this, ReadStringArray(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(short[]))
-                    {
-                        prop.SetValue(this, ReadInt16Array(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(ushort[]))
-                    {
-                        prop.SetValue(this, ReadUInt16Array(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(int[]))
-                    {
-                        prop.SetValue(this, ReadInt32Array(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(uint[]))
-                    {
-                        prop.SetValue(this, ReadUInt32Array(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(double[]))
-                    {
-                        prop.SetValue(this, ReadDoubleArray(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(float[]))
-                    {
-                        prop.SetValue(this, ReadFloatArray(reader), null);
-                    }
-                    else if (prop.PropertyType == typeof(decimal[]))
-                    {
-                        prop.SetValue(this, ReadDecimalArray(reader), null);
-                    }
+                        // saveable type
+                        if (typeof(Saveable).IsAssignableFrom(prop.PropertyType.GetElementType()))
+                        {
+                            var array = Array.CreateInstance(prop.PropertyType.GetElementType(), reader.ReadInt32());
 
-                    // throw error if type is not supported
+                            for (int i = 0; i < array.Length; i++)
+                            {
+                                var saveableObject = Activator.CreateInstance(prop.PropertyType.GetElementType());
+                                ((Saveable)saveableObject).Read(reader);
+
+                                array.SetValue(saveableObject, i);
+                            }
+
+                            prop.SetValue(this, array, null);
+                        }
+
+                        // arrays of primitive data types
+                        else if (prop.PropertyType == typeof(byte[]))
+                        {
+                            prop.SetValue(this, ReadByteArray(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(string[]))
+                        {
+                            prop.SetValue(this, ReadStringArray(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(short[]))
+                        {
+                            prop.SetValue(this, ReadInt16Array(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(ushort[]))
+                        {
+                            prop.SetValue(this, ReadUInt16Array(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(int[]))
+                        {
+                            prop.SetValue(this, ReadInt32Array(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(uint[]))
+                        {
+                            prop.SetValue(this, ReadUInt32Array(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(double[]))
+                        {
+                            prop.SetValue(this, ReadDoubleArray(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(float[]))
+                        {
+                            prop.SetValue(this, ReadFloatArray(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(decimal[]))
+                        {
+                            prop.SetValue(this, ReadDecimalArray(reader), null);
+                        }
+
+                        // throw error if type is not supported
+                        else
+                        {
+                            throw new Exception($"Unsupported property type: {prop.PropertyType}");
+                        }
+                    }
                     else
                     {
-                        throw new Exception($"Unsupported property type: {prop.PropertyType}");
+                        // non-array type
+
+                        // saveable type
+                        if (typeof(Saveable).IsAssignableFrom(prop.PropertyType))
+                        {
+                            var saveableObject = Activator.CreateInstance(prop.PropertyType);
+                            ((Saveable)saveableObject).Read(reader);
+
+                            prop.SetValue(this, saveableObject, null);
+                        }
+
+                        // primitive data types
+                        else if (prop.PropertyType == typeof(byte))
+                        {
+                            prop.SetValue(this, reader.ReadByte(), null);
+                        }
+                        else if (prop.PropertyType == typeof(string))
+                        {
+                            prop.SetValue(this, ReadString(reader), null);
+                        }
+                        else if (prop.PropertyType == typeof(short))
+                        {
+                            prop.SetValue(this, reader.ReadInt16(), null);
+                        }
+                        else if (prop.PropertyType == typeof(ushort))
+                        {
+                            prop.SetValue(this, reader.ReadUInt16(), null);
+                        }
+                        else if (prop.PropertyType == typeof(int))
+                        {
+                            prop.SetValue(this, reader.ReadInt32(), null);
+                        }
+                        else if (prop.PropertyType == typeof(uint))
+                        {
+                            prop.SetValue(this, reader.ReadUInt32(), null);
+                        }
+                        else if (prop.PropertyType == typeof(long))
+                        {
+                            prop.SetValue(this, reader.ReadInt64(), null);
+                        }
+                        else if (prop.PropertyType == typeof(ulong))
+                        {
+                            prop.SetValue(this, reader.ReadUInt64(), null);
+                        }
+                        else if (prop.PropertyType == typeof(double))
+                        {
+                            prop.SetValue(this, reader.ReadDouble(), null);
+                        }
+                        else if (prop.PropertyType == typeof(float))
+                        {
+                            prop.SetValue(this, reader.ReadSingle(), null);
+                        }
+                        else if (prop.PropertyType == typeof(decimal))
+                        {
+                            prop.SetValue(this, reader.ReadDecimal(), null);
+                        }
+
+                        // throw error if type is not supported
+                        else
+                        {
+                            throw new Exception($"Unsupported property type: {prop.PropertyType}");
+                        }
                     }
                 }
             }
@@ -123,102 +164,130 @@ namespace SaveableDotNet
                 {
                     object value = prop.GetValue(this);
 
-                    // primitive data types
-                    if (prop.PropertyType == typeof(byte))
+                    if (prop.PropertyType.IsArray)
                     {
-                        writer.Write((byte)value);
-                    }
-                    else if (prop.PropertyType == typeof(string))
-                    {
-                        WriteString(writer, (string)value);
-                    }
-                    else if (prop.PropertyType == typeof(short))
-                    {
-                        writer.Write((short)value);
-                    }
-                    else if (prop.PropertyType == typeof(ushort))
-                    {
-                        writer.Write((ushort)value);
-                    }
-                    else if (prop.PropertyType == typeof(int))
-                    {
-                        writer.Write((int)value);
-                    }
-                    else if (prop.PropertyType == typeof(uint))
-                    {
-                        writer.Write((uint)value);
-                    }
-                    else if (prop.PropertyType == typeof(long))
-                    {
-                        writer.Write((long)value);
-                    }
-                    else if (prop.PropertyType == typeof(ulong))
-                    {
-                        writer.Write((ulong)value);
-                    }
-                    else if (prop.PropertyType == typeof(double))
-                    {
-                        writer.Write((double)value);
-                    }
-                    else if (prop.PropertyType == typeof(float))
-                    {
-                        writer.Write((float)value);
-                    }
-                    else if (prop.PropertyType == typeof(decimal))
-                    {
-                        writer.Write((decimal)value);
-                    }
+                        if (prop.PropertyType.GetArrayRank() != 1) continue;
+                        // simple array type
 
-                    // arrays of primitive data types
-                    else if (prop.PropertyType == typeof(byte[]))
-                    {
-                        WriteByteArray(writer, (byte[])value);
-                    }
-                    else if (prop.PropertyType == typeof(string[]))
-                    {
-                        WriteStringArray(writer, (string[])value);
-                    }
-                    else if (prop.PropertyType == typeof(short[]))
-                    {
-                        WriteInt16Array(writer, (short[])value);
-                    }
-                    else if (prop.PropertyType == typeof(ushort[]))
-                    {
-                        WriteUInt16Array(writer, (ushort[])value);
-                    }
-                    else if (prop.PropertyType == typeof(int[]))
-                    {
-                        WriteInt32Array(writer, (int[])value);
-                    }
-                    else if (prop.PropertyType == typeof(uint[]))
-                    {
-                        WriteUInt32Array(writer, (uint[])value);
-                    }
-                    else if (prop.PropertyType == typeof(long[]))
-                    {
-                        WriteInt64Array(writer, (long[])value);
-                    }
-                    else if (prop.PropertyType == typeof(ulong[]))
-                    {
-                        WriteUInt64Array(writer, (ulong[])value);
-                    }
-                    else if (prop.PropertyType == typeof(double[]))
-                    {
-                        WriteDoubleArray(writer, (double[])value);
-                    }
-                    else if (prop.PropertyType == typeof(float[]))
-                    {
-                        WriteFloatArray(writer, (float[])value);
-                    }
-                    else if (prop.PropertyType == typeof(decimal[]))
-                    {
-                        WriteDecimalArray(writer, (decimal[])value);
-                    }
+                        // saveable type
+                        if (typeof(Saveable).IsAssignableFrom(prop.PropertyType.GetElementType()))
+                        {
+                            Write(writer, (Saveable[])value);
+                        }
 
-                    // throw error if type is not supported
+                        // arrays of primitive data types
+                        else if (prop.PropertyType == typeof(byte[]))
+                        {
+                            WriteByteArray(writer, (byte[])value);
+                        }
+                        else if (prop.PropertyType == typeof(string[]))
+                        {
+                            WriteStringArray(writer, (string[])value);
+                        }
+                        else if (prop.PropertyType == typeof(short[]))
+                        {
+                            WriteInt16Array(writer, (short[])value);
+                        }
+                        else if (prop.PropertyType == typeof(ushort[]))
+                        {
+                            WriteUInt16Array(writer, (ushort[])value);
+                        }
+                        else if (prop.PropertyType == typeof(int[]))
+                        {
+                            WriteInt32Array(writer, (int[])value);
+                        }
+                        else if (prop.PropertyType == typeof(uint[]))
+                        {
+                            WriteUInt32Array(writer, (uint[])value);
+                        }
+                        else if (prop.PropertyType == typeof(long[]))
+                        {
+                            WriteInt64Array(writer, (long[])value);
+                        }
+                        else if (prop.PropertyType == typeof(ulong[]))
+                        {
+                            WriteUInt64Array(writer, (ulong[])value);
+                        }
+                        else if (prop.PropertyType == typeof(double[]))
+                        {
+                            WriteDoubleArray(writer, (double[])value);
+                        }
+                        else if (prop.PropertyType == typeof(float[]))
+                        {
+                            WriteFloatArray(writer, (float[])value);
+                        }
+                        else if (prop.PropertyType == typeof(decimal[]))
+                        {
+                            WriteDecimalArray(writer, (decimal[])value);
+                        }
+
+                        // throw error if type is not supported
+                        else
+                        {
+                            throw new Exception($"Unsupported property type: {prop.PropertyType}");
+                        }
+                    }
                     else
                     {
-                        throw new Exception($"Unsupported property type: {prop.PropertyType}");
+                        // non-array type
+
+                        // saveable type
+                        if (typeof(Saveable).IsAssignableFrom(prop.PropertyType))
+                        {
+                            Write(writer, (Saveable)value);
+                        }
+
+                        // primitive data types
+                        else if (prop.PropertyType == typeof(byte))
+                        {
+                            writer.Write((byte)value);
+                        }
+                        else if (prop.PropertyType == typeof(string))
+                        {
+                            WriteString(writer, (string)value);
+                        }
+                        else if (prop.PropertyType == typeof(short))
+                        {
+                            writer.Write((short)value);
+                        }
+                        else if (prop.PropertyType == typeof(ushort))
+                        {
+                            writer.Write((ushort)value);
+                        }
+                        else if (prop.PropertyType == typeof(int))
+                        {
+                            writer.Write((int)value);
+                        }
+                        else if (prop.PropertyType == typeof(uint))
+                        {
+                            writer.Write((uint)value);
+                        }
+                        else if (prop.PropertyType == typeof(long))
+                        {
+                            writer.Write((long)value);
+                        }
+                        else if (prop.PropertyType == typeof(ulong))
+                        {
+                            writer.Write((ulong)value);
+                        }
+                        else if (prop.PropertyType == typeof(double))
+                        {
+                            writer.Write((double)value);
+                        }
+                        else if (prop.PropertyType == typeof(float))
+                        {
+                            writer.Write((float)value);
+                        }
+                        else if (prop.PropertyType == typeof(decimal))
+                        {
+                            writer.Write((decimal)value);
+                        }
+
+                        // throw error if type is not supported
+                        else
+                        {
+                            throw new Exception($"Unsupported property type: {prop.PropertyType}");
+                        }
                     }
                 }
             }
