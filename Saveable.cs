@@ -44,6 +44,10 @@ namespace SaveableDotNet
                         {
                             prop.SetValue(this, ReadByteArray(reader), null);
                         }
+                        else if (prop.PropertyType == typeof(char[]))
+                        {
+                            prop.SetValue(this, ReadCharArray(reader), null);
+                        }
                         else if (prop.PropertyType == typeof(string[]))
                         {
                             prop.SetValue(this, ReadStringArray(reader), null);
@@ -100,6 +104,10 @@ namespace SaveableDotNet
                         else if (prop.PropertyType == typeof(byte))
                         {
                             prop.SetValue(this, reader.ReadByte(), null);
+                        }
+                        else if (prop.PropertyType == typeof(char))
+                        {
+                            prop.SetValue(this, reader.ReadChar(), null);
                         }
                         else if (prop.PropertyType == typeof(string))
                         {
@@ -180,6 +188,10 @@ namespace SaveableDotNet
                         {
                             WriteByteArray(writer, (byte[])value);
                         }
+                        else if (prop.PropertyType == typeof(char[]))
+                        {
+                            WriteCharArray(writer, (char[])value);
+                        }
                         else if (prop.PropertyType == typeof(string[]))
                         {
                             WriteStringArray(writer, (string[])value);
@@ -241,6 +253,10 @@ namespace SaveableDotNet
                         else if (prop.PropertyType == typeof(byte))
                         {
                             writer.Write((byte)value);
+                        }
+                        else if (prop.PropertyType == typeof(char))
+                        {
+                            writer.Write((char)value);
                         }
                         else if (prop.PropertyType == typeof(string))
                         {
@@ -304,6 +320,18 @@ namespace SaveableDotNet
 
         #region Protected read methods
         protected byte[] ReadByteArray(BinaryReader reader) => reader.ReadBytes(reader.ReadInt32());
+
+        protected char[] ReadCharArray(BinaryReader reader) {
+            var bytes = ReadByteArray(reader);
+            var array = new char[bytes.Length];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = (char)bytes[i];
+            }
+
+            return array;
+        }
 
         protected string ReadString(BinaryReader reader) => Encoding.UTF8.GetString(ReadByteArray(reader));
 
@@ -430,6 +458,12 @@ namespace SaveableDotNet
 
         #region Protected write methods
         protected void WriteByteArray(BinaryWriter writer, byte[] array)
+        {
+            writer.Write((int)array.Length);
+            writer.Write(array);
+        }
+
+        protected void WriteCharArray(BinaryWriter writer, char[] array)
         {
             writer.Write((int)array.Length);
             writer.Write(array);
