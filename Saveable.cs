@@ -20,7 +20,10 @@ namespace SaveableDotNet
                 {
                     if (prop.PropertyType.IsArray)
                     {
-                        if (prop.PropertyType.GetArrayRank() != 1) continue;
+                        if (prop.PropertyType.GetArrayRank() != 1)
+                        {
+                            throw new Exception("Array must be a simple one-dimensional array.");
+                        }
                         // simple array type
 
                         // saveable type
@@ -174,7 +177,10 @@ namespace SaveableDotNet
 
                     if (prop.PropertyType.IsArray)
                     {
-                        if (prop.PropertyType.GetArrayRank() != 1) continue;
+                        if (prop.PropertyType.GetArrayRank() != 1)
+                        {
+                            throw new Exception("Array must be a simple one-dimensional array.");
+                        }
                         // simple array type
 
                         // saveable type
