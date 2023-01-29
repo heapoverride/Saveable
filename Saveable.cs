@@ -11,7 +11,7 @@ namespace SaveableDotNet
         private long position;
 
         /// <summary>
-        /// Gets the <see cref="Stream"/> position where the <see cref="Saveable"/> was read from
+        /// Gets the most recent <see cref="Stream"/> position where the <see cref="Saveable"/> was read from or written to
         /// </summary>
         public long Position { get { return position; } }
         #endregion
@@ -180,6 +180,8 @@ namespace SaveableDotNet
         /// <param name="writer"></param>
         public virtual void Write(BinaryWriter writer)
         {
+            position = writer.BaseStream.Position;
+
             foreach (var prop in GetType().GetProperties())
             {
                 if (Attribute.IsDefined(prop, typeof(SaveableAttribute)))
