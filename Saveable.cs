@@ -7,6 +7,15 @@ namespace SaveableDotNet
 {
     public class Saveable
     {
+        #region Properties
+        private long position;
+
+        /// <summary>
+        /// Gets the <see cref="Stream"/> position where the <see cref="Saveable"/> was read from
+        /// </summary>
+        public long Position { get { return position; } }
+        #endregion
+
         #region Overridable public virtual instance methods
         /// <summary>
         /// Read <see cref="Saveable"/> from <see cref="BinaryReader"/>
@@ -14,6 +23,8 @@ namespace SaveableDotNet
         /// <param name="reader"></param>
         public virtual void Read(BinaryReader reader)
         {
+            position = reader.BaseStream.Position;
+
             foreach (var prop in GetType().GetProperties())
             {
                 if (Attribute.IsDefined(prop, typeof(SaveableAttribute)))
