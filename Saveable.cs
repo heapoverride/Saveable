@@ -513,6 +513,13 @@ namespace SaveableDotNet
         public static float ReadFloat(BinaryReader reader) => reader.ReadSingle();
 
         /// <summary>
+        /// Read a decimal value from <see cref="BinaryReader"/>
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static decimal ReadDecimal(BinaryReader reader) => reader.ReadDecimal();
+
+        /// <summary>
         /// Read a length-prefixed byte array from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
