@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace SaveableDotNet
@@ -9,11 +10,17 @@ namespace SaveableDotNet
     {
         #region Properties
         private long position;
+        private long length;
 
         /// <summary>
-        /// Gets the most recent <see cref="Stream"/> position where the <see cref="Saveable"/> was read from or written to
+        /// Gets the position in the <see cref="Stream"/> where the <see cref="Saveable"/> was read from or written to
         /// </summary>
         public long Position { get { return position; } }
+
+        /// <summary>
+        /// Gets the length of <see cref="Saveable"/> that was read from or written to a <see cref="Stream"/>
+        /// </summary>
+        public long Length { get { return length; } }
         #endregion
 
         #region Overridable public virtual instance methods
@@ -23,6 +30,7 @@ namespace SaveableDotNet
         /// <param name="reader"></param>
         public virtual void Read(BinaryReader reader)
         {
+            // Update position
             position = reader.BaseStream.Position;
 
             foreach (var prop in GetType().GetProperties())
@@ -172,6 +180,9 @@ namespace SaveableDotNet
                     }
                 }
             }
+
+            // Update length
+            length = reader.BaseStream.Position - position;
         }
 
         /// <summary>
@@ -180,6 +191,7 @@ namespace SaveableDotNet
         /// <param name="writer"></param>
         public virtual void Write(BinaryWriter writer)
         {
+            // Update position
             position = writer.BaseStream.Position;
 
             foreach (var prop in GetType().GetProperties())
@@ -326,6 +338,9 @@ namespace SaveableDotNet
                     }
                 }
             }
+
+            // Update length
+            length = writer.BaseStream.Position - position;
         }
         #endregion
 
@@ -694,15 +709,24 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public static void Write(BinaryWriter writer, Saveable[] array)
+        /// <param name="index"></param>
+        /// <param name="length"></param>
+        public static void Write(BinaryWriter writer, Saveable[] array, int index, int length)
         {
             writer.Write((int)array.Length);
 
-            foreach (var obj in array)
+            for (int i = index; i < length; i++)
             {
-                obj.Write(writer);
+                array[i].Write(writer);
             }
         }
+
+        /// <summary>
+        /// Write array of <see cref="Saveable"/> to <see cref="BinaryWriter"/>
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="array"></param>
+        public static void Write(BinaryWriter writer, Saveable[] array) => Write(writer, array, 0, array.Length);
 
         /// <summary>
         /// Dump <see cref="Saveable"/> to a byte array
