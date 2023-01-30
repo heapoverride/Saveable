@@ -65,29 +65,23 @@ var fruits = new Fruit[] {
     "Mango"
 };
 
-using (var stream = File.Open("Fruits.bin", FileMode.Create, FileAccess.Write))
-{
-    using (var writer = new BinaryWriter(stream))
-    {
-        Saveable.Write(writer, fruits);
-    }
-}
+var stream = File.Open("Fruits.bin", FileMode.Create, FileAccess.Write);
+var writer = new BinaryWriter(stream);
+
+Saveable.Write(writer, fruits);
 ```
 
 ## Reading Saveable from binary file
 
 ```cs
-using (var stream = File.Open("Fruits.bin", FileMode.Open, FileAccess.Read))
-{
-    using (var reader = new BinaryReader(stream))
-    {
-        var fruits = Saveable.ReadArray<Fruit>(reader);
+var stream = File.Open("Fruits.bin", FileMode.Open, FileAccess.Read);
+var reader = new BinaryReader(stream);
 
-        foreach (var fruit in fruits)
-        {
-            Console.WriteLine($"0x{fruit.Position.ToString("X8")} (0x{fruit.Length.ToString("X8")}): {fruit.Name}");
-        }
-    }
+var fruits = Saveable.ReadArray<Fruit>(reader);
+
+foreach (var fruit in fruits)
+{
+    Console.WriteLine($"0x{fruit.Position.ToString("X8")} (0x{fruit.Length.ToString("X8")}): {fruit.Name}");
 }
 ```
 ```
