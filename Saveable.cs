@@ -26,7 +26,7 @@ namespace SaveableDotNet
 
         #region Overridable public virtual instance methods
         /// <summary>
-        /// Read <see cref="Saveable"/> from <see cref="BinaryReader"/>
+        /// Read a <see cref="Saveable"/> from a <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         public virtual void Read(BinaryReader reader)
@@ -187,7 +187,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write <see cref="Saveable"/> to <see cref="BinaryWriter"/>
+        /// Write a <see cref="Saveable"/> to a <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         public virtual void Write(BinaryWriter writer)
@@ -347,7 +347,7 @@ namespace SaveableDotNet
 
         #region Public instance methods
         /// <summary>
-        /// Dump <see cref="Saveable"/> to a byte array
+        /// Dump a <see cref="Saveable"/> to a byte array
         /// </summary>
         /// <returns></returns>
         public byte[] GetBytes() => GetBytes(this);
@@ -355,7 +355,7 @@ namespace SaveableDotNet
 
         #region Static read methods
         /// <summary>
-        /// Read <see cref="Saveable"/> from <see cref="BinaryReader"/>
+        /// Read a <see cref="Saveable"/> from <see cref="BinaryReader"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
@@ -368,7 +368,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read <see cref="Saveable"/> from byte array
+        /// Read a <see cref="Saveable"/> from byte array
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
@@ -385,7 +385,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read array of <see cref="Saveable"/> from <see cref="BinaryReader"/>
+        /// Read an array of <see cref="Saveable"/> from <see cref="BinaryReader"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
@@ -403,7 +403,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read array of <see cref="Saveable"/> from byte array
+        /// Read an array of <see cref="Saveable"/> from byte array
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="array"></param>
@@ -724,14 +724,14 @@ namespace SaveableDotNet
 
         #region Static write methods
         /// <summary>
-        /// Write <see cref="Saveable"/> to <see cref="BinaryWriter"/>
+        /// Write a <see cref="Saveable"/> to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="saveable"></param>
         public static void Write(BinaryWriter writer, Saveable saveable) => saveable.Write(writer);
 
         /// <summary>
-        /// Write array of <see cref="Saveable"/> to <see cref="BinaryWriter"/>
+        /// Write an array of <see cref="Saveable"/> to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -746,7 +746,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Dump <see cref="Saveable"/> to a byte array
+        /// Dump a <see cref="Saveable"/> to a byte array
         /// </summary>
         /// <param name="saveable"></param>
         /// <returns></returns>
@@ -764,7 +764,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Dump array of <see cref="Saveable"/> to a byte array
+        /// Dump an array of <see cref="Saveable"/> to a byte array
         /// </summary>
         /// <param name="saveable"></param>
         /// <returns></returns>
@@ -859,7 +859,7 @@ namespace SaveableDotNet
         public static void WriteDecimal(BinaryWriter writer, decimal value) => writer.Write(value);
 
         /// <summary>
-        /// Write length-prefixed byte array to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed byte array to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -870,7 +870,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed char array to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed char array to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -881,14 +881,14 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed string to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed string to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="value"></param>
         public static void WriteString(BinaryWriter writer, string value) => WriteByteArray(writer, Encoding.UTF8.GetBytes(value));
 
         /// <summary>
-        /// Write length-prefixed array of length-prefixed strings to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of length-prefixed strings to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -903,7 +903,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of 16-bit signed integers to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 16-bit signed integers to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -918,7 +918,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of 16-bit unsigned integers to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 16-bit unsigned integers to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -933,7 +933,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of 32-bit signed integers to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 32-bit signed integers to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -948,7 +948,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of 32-bit unsigned integers to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 32-bit unsigned integers to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -963,7 +963,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of 64-bit signed integers to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 64-bit signed integers to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -978,7 +978,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of 64-bit unsigned integers to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 64-bit unsigned integers to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -993,7 +993,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of double-precision floating-point values to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of double-precision floating-point values to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -1008,7 +1008,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of single-precision floating-point values to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of single-precision floating-point values to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
@@ -1023,7 +1023,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write length-prefixed array of decimal values to <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of decimal values to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
