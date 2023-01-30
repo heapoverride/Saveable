@@ -31,7 +31,6 @@ Without `Saveable` attribute
 ```cs
 class Fruit : Saveable
 {
-    [Saveable]
     public string Name { get; set; }
 
     public Fruit() { }
