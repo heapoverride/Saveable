@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 
@@ -709,24 +710,15 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        /// <param name="index"></param>
-        /// <param name="length"></param>
-        public static void Write(BinaryWriter writer, Saveable[] array, int index, int length)
+        public static void Write(BinaryWriter writer, Saveable[] array)
         {
             writer.Write((int)array.Length);
 
-            for (int i = index; i < length; i++)
+            foreach (var saveable in array)
             {
-                array[i].Write(writer);
+                saveable.Write(writer);
             }
         }
-
-        /// <summary>
-        /// Write array of <see cref="Saveable"/> to <see cref="BinaryWriter"/>
-        /// </summary>
-        /// <param name="writer"></param>
-        /// <param name="array"></param>
-        public static void Write(BinaryWriter writer, Saveable[] array) => Write(writer, array, 0, array.Length);
 
         /// <summary>
         /// Dump <see cref="Saveable"/> to a byte array
