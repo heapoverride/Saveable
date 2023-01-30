@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace SaveableDotNet
 {
+    /// <summary>
+    /// Provides the base class for <see cref="Saveable"/> objects
+    /// </summary>
     public class Saveable
     {
         #region Properties
