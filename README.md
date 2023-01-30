@@ -1,5 +1,6 @@
 # Saveable
-Easy to use class library to read/write objects from/to binary stream
+
+Easy to use class library for reading/writing objects from/to binary streams.
 
 # Examples
 
@@ -10,6 +11,9 @@ With `Saveable` attribute
 ```cs
 class Fruit : Saveable
 {
+    // Only primitive types, Saveable and 1-dimensional arrays
+    // of primitive types and Saveables can be automatically
+    // handled with the Saveable attribute
     [Saveable]
     public string Name { get; set; }
 
@@ -46,11 +50,15 @@ class Fruit : Saveable
 
     public override void Read(BinaryReader reader)
     {
+        // You can still call the base method to automatically 
+        // read properties with Saveable attribute
         Name = ReadString(reader);
     }
 
     public override void Write(BinaryWriter writer)
     {
+        // You can still call the base method to automatically 
+        // write properties with Saveable attribute
         WriteString(writer, Name);
     }
 }
