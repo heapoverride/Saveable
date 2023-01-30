@@ -447,84 +447,84 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public byte ReadByte(BinaryReader reader) => reader.ReadByte();
+        public static byte ReadByte(BinaryReader reader) => reader.ReadByte();
 
         /// <summary>
         /// Read a char from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public char ReadChar(BinaryReader reader) => reader.ReadChar();
+        public static char ReadChar(BinaryReader reader) => reader.ReadChar();
 
         /// <summary>
         /// Read a 16-bit signed integer from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public short ReadInt16(BinaryReader reader) => reader.ReadInt16();
+        public static short ReadInt16(BinaryReader reader) => reader.ReadInt16();
 
         /// <summary>
         /// Read a 16-bit unsigned integer from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public ushort ReadUInt16(BinaryReader reader) => reader.ReadUInt16();
+        public static ushort ReadUInt16(BinaryReader reader) => reader.ReadUInt16();
 
         /// <summary>
         /// Read a 32-bit signed integer from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public int ReadInt32(BinaryReader reader) => reader.ReadInt32();
+        public static int ReadInt32(BinaryReader reader) => reader.ReadInt32();
 
         /// <summary>
         /// Read a 32-bit unsigned integer from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public uint ReadUInt32(BinaryReader reader) => reader.ReadUInt32();
+        public static uint ReadUInt32(BinaryReader reader) => reader.ReadUInt32();
 
         /// <summary>
         /// Read a 64-bit signed integer from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public long ReadInt64(BinaryReader reader) => reader.ReadInt64();
+        public static long ReadInt64(BinaryReader reader) => reader.ReadInt64();
 
         /// <summary>
         /// Read a 64-bit unsigned integer from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public ulong ReadUInt64(BinaryReader reader) => reader.ReadUInt64();
+        public static ulong ReadUInt64(BinaryReader reader) => reader.ReadUInt64();
 
         /// <summary>
         /// Read a double-precision floating-point value from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public double ReadDouble(BinaryReader reader) => reader.ReadDouble();
+        public static double ReadDouble(BinaryReader reader) => reader.ReadDouble();
 
         /// <summary>
         /// Read a single-precision floating-point value from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public float ReadFloat(BinaryReader reader) => reader.ReadSingle();
+        public static float ReadFloat(BinaryReader reader) => reader.ReadSingle();
 
         /// <summary>
         /// Read a length-prefixed byte array from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public byte[] ReadByteArray(BinaryReader reader) => reader.ReadBytes(reader.ReadInt32());
+        public static byte[] ReadByteArray(BinaryReader reader) => reader.ReadBytes(reader.ReadInt32());
 
         /// <summary>
         /// Read a length-prefixed char array from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public char[] ReadCharArray(BinaryReader reader)
+        public static char[] ReadCharArray(BinaryReader reader)
         {
             var bytes = ReadByteArray(reader);
             var array = new char[bytes.Length];
@@ -542,14 +542,14 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public string ReadString(BinaryReader reader) => Encoding.UTF8.GetString(ReadByteArray(reader));
+        public static string ReadString(BinaryReader reader) => Encoding.UTF8.GetString(ReadByteArray(reader));
 
         /// <summary>
         /// Read a length-prefixed array of length-prefixed strings from <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public string[] ReadStringArray(BinaryReader reader)
+        public static string[] ReadStringArray(BinaryReader reader)
         {
             var array = new string[reader.ReadInt32()];
 
@@ -566,7 +566,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public short[] ReadInt16Array(BinaryReader reader)
+        public static short[] ReadInt16Array(BinaryReader reader)
         {
             var array = new short[reader.ReadInt32()];
 
@@ -583,7 +583,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public ushort[] ReadUInt16Array(BinaryReader reader)
+        public static ushort[] ReadUInt16Array(BinaryReader reader)
         {
             var array = new ushort[reader.ReadInt32()];
 
@@ -600,7 +600,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public int[] ReadInt32Array(BinaryReader reader)
+        public static int[] ReadInt32Array(BinaryReader reader)
         {
             var array = new int[reader.ReadInt32()];
 
@@ -617,7 +617,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public uint[] ReadUInt32Array(BinaryReader reader)
+        public static uint[] ReadUInt32Array(BinaryReader reader)
         {
             var array = new uint[reader.ReadInt32()];
 
@@ -634,7 +634,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public long[] ReadInt64Array(BinaryReader reader)
+        public static long[] ReadInt64Array(BinaryReader reader)
         {
             var array = new long[reader.ReadInt32()];
 
@@ -651,7 +651,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public ulong[] ReadUInt64Array(BinaryReader reader)
+        public static ulong[] ReadUInt64Array(BinaryReader reader)
         {
             var array = new ulong[reader.ReadInt32()];
 
@@ -668,7 +668,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public double[] ReadDoubleArray(BinaryReader reader)
+        public static double[] ReadDoubleArray(BinaryReader reader)
         {
             var array = new double[reader.ReadInt32()];
 
@@ -685,7 +685,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public float[] ReadFloatArray(BinaryReader reader)
+        public static float[] ReadFloatArray(BinaryReader reader)
         {
             var array = new float[reader.ReadInt32()];
 
@@ -702,7 +702,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public decimal[] ReadDecimalArray(BinaryReader reader)
+        public static decimal[] ReadDecimalArray(BinaryReader reader)
         {
             var array = new decimal[reader.ReadInt32()];
 
@@ -856,7 +856,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteByteArray(BinaryWriter writer, byte[] array)
+        public static void WriteByteArray(BinaryWriter writer, byte[] array)
         {
             writer.Write((int)array.Length);
             writer.Write(array);
@@ -867,7 +867,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteCharArray(BinaryWriter writer, char[] array)
+        public static void WriteCharArray(BinaryWriter writer, char[] array)
         {
             writer.Write((int)array.Length);
             writer.Write(array);
@@ -878,14 +878,14 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="value"></param>
-        public void WriteString(BinaryWriter writer, string value) => WriteByteArray(writer, Encoding.UTF8.GetBytes(value));
+        public static void WriteString(BinaryWriter writer, string value) => WriteByteArray(writer, Encoding.UTF8.GetBytes(value));
 
         /// <summary>
         /// Write length-prefixed array of length-prefixed strings to <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteStringArray(BinaryWriter writer, string[] array)
+        public static void WriteStringArray(BinaryWriter writer, string[] array)
         {
             writer.Write((int)array.Length);
 
@@ -900,7 +900,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteInt16Array(BinaryWriter writer, short[] array)
+        public static void WriteInt16Array(BinaryWriter writer, short[] array)
         {
             writer.Write((int)array.Length);
 
@@ -915,7 +915,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteUInt16Array(BinaryWriter writer, ushort[] array)
+        public static void WriteUInt16Array(BinaryWriter writer, ushort[] array)
         {
             writer.Write((int)array.Length);
 
@@ -930,7 +930,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteInt32Array(BinaryWriter writer, int[] array)
+        public static void WriteInt32Array(BinaryWriter writer, int[] array)
         {
             writer.Write((int)array.Length);
 
@@ -945,7 +945,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteUInt32Array(BinaryWriter writer, uint[] array)
+        public static void WriteUInt32Array(BinaryWriter writer, uint[] array)
         {
             writer.Write((uint)array.Length);
 
@@ -960,7 +960,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteInt64Array(BinaryWriter writer, long[] array)
+        public static void WriteInt64Array(BinaryWriter writer, long[] array)
         {
             writer.Write((int)array.Length);
 
@@ -975,7 +975,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteUInt64Array(BinaryWriter writer, ulong[] array)
+        public static void WriteUInt64Array(BinaryWriter writer, ulong[] array)
         {
             writer.Write((uint)array.Length);
 
@@ -990,7 +990,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteDoubleArray(BinaryWriter writer, double[] array)
+        public static void WriteDoubleArray(BinaryWriter writer, double[] array)
         {
             writer.Write((uint)array.Length);
 
@@ -1005,7 +1005,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteFloatArray(BinaryWriter writer, float[] array)
+        public static void WriteFloatArray(BinaryWriter writer, float[] array)
         {
             writer.Write((uint)array.Length);
 
@@ -1020,7 +1020,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public void WriteDecimalArray(BinaryWriter writer, decimal[] array)
+        public static void WriteDecimalArray(BinaryWriter writer, decimal[] array)
         {
             writer.Write((uint)array.Length);
 
