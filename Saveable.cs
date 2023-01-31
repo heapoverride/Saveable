@@ -46,15 +46,16 @@ namespace SaveableDotNet
                             throw new Exception("Array must be a simple one-dimensional array.");
                         }
                         // simple array type
+                        var elementType = prop.PropertyType.GetElementType();
 
                         // saveable type
-                        if (typeof(Saveable).IsAssignableFrom(prop.PropertyType.GetElementType()))
+                        if (typeof(Saveable).IsAssignableFrom(elementType))
                         {
-                            var array = Array.CreateInstance(prop.PropertyType.GetElementType(), reader.ReadInt32());
+                            var array = Array.CreateInstance(elementType, reader.ReadInt32());
 
                             for (int i = 0; i < array.Length; i++)
                             {
-                                var saveableObject = Activator.CreateInstance(prop.PropertyType.GetElementType());
+                                var saveableObject = Activator.CreateInstance(elementType);
                                 ((Saveable)saveableObject).Read(reader);
 
                                 array.SetValue(saveableObject, i);
