@@ -8,6 +8,9 @@ Easy to use class library for reading/writing objects from/to binary streams.
 
 With `Saveable` attribute
 
+> **Warning**
+> The default `Read` and `Write` instance methods are considerably slower, mainly due to automatic type checking, so if you're working with thousands of Saveable objects, you should look into the second example that overrides the default behavior of `Read`/`Write` methods.
+
 ```cs
 class Fruit : Saveable
 {
