@@ -6,7 +6,7 @@ Easy to use class library for reading/writing objects from/to binary streams.
 
 ## Saveable Fruit class
 
-With `Saveable` attribute
+With a `Saveable` attribute
 
 > **Warning**
 > The default `Read` and `Write` instance methods are considerably slower, mainly due to automatic type checking, so if you're working with thousands of Saveable objects, you should look into the second example that overrides the default behavior of `Read`/`Write` methods.
@@ -33,7 +33,7 @@ class Fruit : Saveable
 }
 ```
 
-Without `Saveable` attribute
+Without a `Saveable` attribute
 
 ```cs
 class Fruit : Saveable
@@ -67,7 +67,7 @@ class Fruit : Saveable
 }
 ```
 
-## Writing array of Saveable to binary file
+## Writing an array of Saveable to a binary file
 
 ```cs
 var fruits = new Fruit[] {
@@ -82,7 +82,7 @@ var writer = new BinaryWriter(stream);
 Saveable.Write(writer, fruits);
 ```
 
-## Reading Saveable from binary file
+## Reading a Saveable from a binary file
 
 ```cs
 var stream = File.Open("Fruits.bin", FileMode.Open, FileAccess.Read);
@@ -101,7 +101,7 @@ foreach (var fruit in fruits)
 0x00000017 (0x00000009): Mango
 ```
 
-### Reading array of Saveable from byte array
+### Reading an array of Saveable from a byte array
 
 ```cs
 var fruits = Saveable.ReadArray<Fruit>(new byte[] {
