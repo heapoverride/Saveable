@@ -51,14 +51,14 @@ class Fruit : Saveable
         return new Fruit(value);
     }
 
-    public override void Read(BinaryReader reader)
+    protected override void Read(BinaryReader reader)
     {
         // You can still call the base method to automatically 
         // read properties with Saveable attribute
         Name = ReadString(reader);
     }
 
-    public override void Write(BinaryWriter writer)
+    protected override void Write(BinaryWriter writer)
     {
         // You can still call the base method to automatically 
         // write properties with Saveable attribute
