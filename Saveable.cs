@@ -25,16 +25,13 @@ namespace SaveableDotNet
         public long Length { get { return length; } }
         #endregion
 
-        #region Overridable public virtual instance methods
+        #region Overridable protected virtual instance methods
         /// <summary>
         /// Read a <see cref="Saveable"/> from a <see cref="BinaryReader"/>
         /// </summary>
         /// <param name="reader"></param>
-        public virtual void Read(BinaryReader reader)
+        protected virtual void Read(BinaryReader reader)
         {
-            // Update position
-            position = reader.BaseStream.Position;
-
             foreach (var prop in GetType().GetProperties())
             {
                 // Skip properties not marked Saveable
@@ -183,20 +180,14 @@ namespace SaveableDotNet
                     }
                 }
             }
-
-            // Update length
-            length = reader.BaseStream.Position - position;
         }
 
         /// <summary>
         /// Write a <see cref="Saveable"/> to a <see cref="BinaryWriter"/>
         /// </summary>
         /// <param name="writer"></param>
-        public virtual void Write(BinaryWriter writer)
+        protected virtual void Write(BinaryWriter writer)
         {
-            // Update position
-            position = writer.BaseStream.Position;
-
             foreach (var prop in GetType().GetProperties())
             {
                 // Skip properties not marked Saveable
@@ -342,9 +333,6 @@ namespace SaveableDotNet
                     }
                 }
             }
-
-            // Update length
-            length = writer.BaseStream.Position - position;
         }
         #endregion
 
@@ -366,7 +354,16 @@ namespace SaveableDotNet
         public static T Read<T>(BinaryReader reader) where T : Saveable
         {
             var saveable = Activator.CreateInstance<T>();
+
+            // Update position
+            saveable.position = reader.BaseStream.Position;
+
+            // Read saveable
             saveable.Read(reader);
+
+            // Update length
+            saveable.length = reader.BaseStream.Position - saveable.position;
+
             return saveable;
         }
 
@@ -731,7 +728,17 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="saveable"></param>
-        public static void Write(BinaryWriter writer, Saveable saveable) => saveable.Write(writer);
+        public static void Write(BinaryWriter writer, Saveable saveable)
+        {
+            // Update position
+            saveable.position = writer.BaseStream.Position;
+
+            // Write saveable
+            saveable.Write(writer);
+
+            // Update length
+            saveable.length = writer.BaseStream.Position - saveable.position;
+        }
 
         /// <summary>
         /// Write an array of <see cref="Saveable"/> to a <see cref="BinaryWriter"/>
@@ -744,7 +751,7 @@ namespace SaveableDotNet
 
             foreach (var saveable in array)
             {
-                saveable.Write(writer);
+                Write(writer, saveable);
             }
         }
 
