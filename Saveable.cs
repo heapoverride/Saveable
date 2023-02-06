@@ -75,6 +75,14 @@ namespace SaveableDotNet
                     {
                         prop.SetValue(this, ReadUInt32Array(reader));
                     }
+                    else if (elementType == typeof(long))
+                    {
+                        prop.SetValue(this, reader.ReadInt64());
+                    }
+                    else if (elementType == typeof(ulong))
+                    {
+                        prop.SetValue(this, reader.ReadUInt64());
+                    }
                     else if (elementType == typeof(double))
                     {
                         prop.SetValue(this, ReadDoubleArray(reader));
