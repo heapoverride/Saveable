@@ -1110,7 +1110,7 @@ namespace SaveableDotNet
         public class Context
         {
             /// <summary>
-            /// Gets the base stream associated with this <see cref="Context"/>
+            /// Gets the base <see cref="System.IO.Stream"/> associated with this <see cref="Context"/>
             /// </summary>
             public Stream Stream { get; }
 
