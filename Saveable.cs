@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace SaveableDotNet
@@ -1107,7 +1108,7 @@ namespace SaveableDotNet
         /// <summary>
         /// Context base class
         /// </summary>
-        public class Context
+        public class Context : IDisposable
         {
             /// <summary>
             /// Gets the base <see cref="System.IO.Stream"/> associated with this <see cref="Context"/>
@@ -1118,12 +1119,17 @@ namespace SaveableDotNet
             {
                 Stream = stream;
             }
+
+            public void Dispose()
+            {
+                Stream?.Dispose();
+            }
         }
 
         /// <summary>
         /// Read context
         /// </summary>
-        public class ReadContext : Context
+        public class ReadContext : Context, IDisposable
         {
             /// <summary>
             /// Gets the <see cref="BinaryReader"/> associated with this <see cref="ReadContext"/>
@@ -1139,12 +1145,17 @@ namespace SaveableDotNet
             {
                 Reader = reader;
             }
+
+            new public void Dispose()
+            {
+                Reader?.Dispose();
+            }
         }
 
         /// <summary>
         /// Write context
         /// </summary>
-        public class WriteContext : Context
+        public class WriteContext : Context, IDisposable
         {
             /// <summary>
             /// Gets the <see cref="BinaryWriter"/> associated with this <see cref="WriteContext"/>
@@ -1159,6 +1170,11 @@ namespace SaveableDotNet
             public WriteContext(BinaryWriter writer) : base(writer.BaseStream)
             {
                 Writer = writer;
+            }
+
+            new public void Dispose()
+            {
+                Writer?.Dispose();
             }
         }
         #endregion
