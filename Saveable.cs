@@ -835,13 +835,13 @@ namespace SaveableDotNet
         /// <summary>
         /// Dump an array of <see cref="Saveable"/> to byte array
         /// </summary>
-        /// <param name="saveable"></param>
+        /// <param name="array"></param>
         /// <returns></returns>
-        public static byte[] GetBytes(Saveable[] saveable)
+        public static byte[] GetBytes(Saveable[] array)
         {
             using (var stream = new MemoryStream())
             {
-                Write(stream, saveable);
+                Write(stream, array);
                 return stream.ToArray();
             }
         }
