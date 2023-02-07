@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace SaveableDotNet
@@ -27,10 +28,10 @@ namespace SaveableDotNet
 
         #region Overridable protected virtual instance methods
         /// <summary>
-        /// Read a <see cref="Saveable"/> from a <see cref="BinaryReader"/>
+        /// Read a <see cref="Saveable"/> from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
-        protected virtual void Read(BinaryReader reader)
+        /// <param name="ctx"></param>
+        protected virtual void Read(ReadContext ctx)
         {
             foreach (var prop in GetType().GetProperties())
             {
@@ -49,62 +50,62 @@ namespace SaveableDotNet
                     // arrays of primitive data types
                     if (elementType == typeof(byte))
                     {
-                        prop.SetValue(this, ReadByteArray(reader));
+                        prop.SetValue(this, ReadByteArray(ctx));
                     }
                     else if (elementType == typeof(char))
                     {
-                        prop.SetValue(this, ReadCharArray(reader));
+                        prop.SetValue(this, ReadCharArray(ctx));
                     }
                     else if (elementType == typeof(string))
                     {
-                        prop.SetValue(this, ReadStringArray(reader));
+                        prop.SetValue(this, ReadStringArray(ctx));
                     }
                     else if (elementType == typeof(short))
                     {
-                        prop.SetValue(this, ReadInt16Array(reader));
+                        prop.SetValue(this, ReadInt16Array(ctx));
                     }
                     else if (elementType == typeof(ushort))
                     {
-                        prop.SetValue(this, ReadUInt16Array(reader));
+                        prop.SetValue(this, ReadUInt16Array(ctx));
                     }
                     else if (elementType == typeof(int))
                     {
-                        prop.SetValue(this, ReadInt32Array(reader));
+                        prop.SetValue(this, ReadInt32Array(ctx));
                     }
                     else if (elementType == typeof(uint))
                     {
-                        prop.SetValue(this, ReadUInt32Array(reader));
+                        prop.SetValue(this, ReadUInt32Array(ctx));
                     }
                     else if (elementType == typeof(long))
                     {
-                        prop.SetValue(this, reader.ReadInt64());
+                        prop.SetValue(this, ctx.Reader.ReadInt64());
                     }
                     else if (elementType == typeof(ulong))
                     {
-                        prop.SetValue(this, reader.ReadUInt64());
+                        prop.SetValue(this, ctx.Reader.ReadUInt64());
                     }
                     else if (elementType == typeof(double))
                     {
-                        prop.SetValue(this, ReadDoubleArray(reader));
+                        prop.SetValue(this, ReadDoubleArray(ctx));
                     }
                     else if (elementType == typeof(float))
                     {
-                        prop.SetValue(this, ReadFloatArray(reader));
+                        prop.SetValue(this, ReadFloatArray(ctx));
                     }
                     else if (elementType == typeof(decimal))
                     {
-                        prop.SetValue(this, ReadDecimalArray(reader));
+                        prop.SetValue(this, ReadDecimalArray(ctx));
                     }
 
                     // saveable type
                     else if (typeof(Saveable).IsAssignableFrom(elementType))
                     {
-                        var array = Array.CreateInstance(elementType, reader.ReadInt32());
+                        var array = Array.CreateInstance(elementType, ctx.Reader.ReadInt32());
 
                         for (int i = 0; i < array.Length; i++)
                         {
                             var saveableObject = Activator.CreateInstance(elementType);
-                            ((Saveable)saveableObject).Read(reader);
+                            ((Saveable)saveableObject).Read(ctx);
 
                             array.SetValue(saveableObject, i);
                         }
@@ -125,58 +126,58 @@ namespace SaveableDotNet
                     // primitive data types
                     if (prop.PropertyType == typeof(byte))
                     {
-                        prop.SetValue(this, reader.ReadByte());
+                        prop.SetValue(this, ctx.Reader.ReadByte());
                     }
                     else if (prop.PropertyType == typeof(char))
                     {
-                        prop.SetValue(this, reader.ReadChar());
+                        prop.SetValue(this, ctx.Reader.ReadChar());
                     }
                     else if (prop.PropertyType == typeof(string))
                     {
-                        prop.SetValue(this, ReadString(reader));
+                        prop.SetValue(this, ReadString(ctx));
                     }
                     else if (prop.PropertyType == typeof(short))
                     {
-                        prop.SetValue(this, reader.ReadInt16());
+                        prop.SetValue(this, ctx.Reader.ReadInt16());
                     }
                     else if (prop.PropertyType == typeof(ushort))
                     {
-                        prop.SetValue(this, reader.ReadUInt16());
+                        prop.SetValue(this, ctx.Reader.ReadUInt16());
                     }
                     else if (prop.PropertyType == typeof(int))
                     {
-                        prop.SetValue(this, reader.ReadInt32());
+                        prop.SetValue(this, ctx.Reader.ReadInt32());
                     }
                     else if (prop.PropertyType == typeof(uint))
                     {
-                        prop.SetValue(this, reader.ReadUInt32());
+                        prop.SetValue(this, ctx.Reader.ReadUInt32());
                     }
                     else if (prop.PropertyType == typeof(long))
                     {
-                        prop.SetValue(this, reader.ReadInt64());
+                        prop.SetValue(this, ctx.Reader.ReadInt64());
                     }
                     else if (prop.PropertyType == typeof(ulong))
                     {
-                        prop.SetValue(this, reader.ReadUInt64());
+                        prop.SetValue(this, ctx.Reader.ReadUInt64());
                     }
                     else if (prop.PropertyType == typeof(double))
                     {
-                        prop.SetValue(this, reader.ReadDouble());
+                        prop.SetValue(this, ctx.Reader.ReadDouble());
                     }
                     else if (prop.PropertyType == typeof(float))
                     {
-                        prop.SetValue(this, reader.ReadSingle());
+                        prop.SetValue(this, ctx.Reader.ReadSingle());
                     }
                     else if (prop.PropertyType == typeof(decimal))
                     {
-                        prop.SetValue(this, reader.ReadDecimal());
+                        prop.SetValue(this, ctx.Reader.ReadDecimal());
                     }
 
                     // saveable type
                     else if (typeof(Saveable).IsAssignableFrom(prop.PropertyType))
                     {
                         var saveableObject = Activator.CreateInstance(prop.PropertyType);
-                        ((Saveable)saveableObject).Read(reader);
+                        ((Saveable)saveableObject).Read(ctx);
 
                         prop.SetValue(this, saveableObject);
                     }
@@ -191,10 +192,10 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a <see cref="Saveable"/> to a <see cref="BinaryWriter"/>
+        /// Write a <see cref="Saveable"/> to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
-        protected virtual void Write(BinaryWriter writer)
+        /// <param name="ctx"></param>
+        protected virtual void Write(WriteContext ctx)
         {
             foreach (var prop in GetType().GetProperties())
             {
@@ -215,57 +216,57 @@ namespace SaveableDotNet
                     // arrays of primitive data types
                     if (elementType == typeof(byte))
                     {
-                        WriteByteArray(writer, (byte[])value);
+                        WriteByteArray(ctx, (byte[])value);
                     }
                     else if (elementType == typeof(char))
                     {
-                        WriteCharArray(writer, (char[])value);
+                        WriteCharArray(ctx, (char[])value);
                     }
                     else if (elementType == typeof(string))
                     {
-                        WriteStringArray(writer, (string[])value);
+                        WriteStringArray(ctx, (string[])value);
                     }
                     else if (elementType == typeof(short))
                     {
-                        WriteInt16Array(writer, (short[])value);
+                        WriteInt16Array(ctx, (short[])value);
                     }
                     else if (elementType == typeof(ushort))
                     {
-                        WriteUInt16Array(writer, (ushort[])value);
+                        WriteUInt16Array(ctx, (ushort[])value);
                     }
                     else if (elementType == typeof(int))
                     {
-                        WriteInt32Array(writer, (int[])value);
+                        WriteInt32Array(ctx, (int[])value);
                     }
                     else if (elementType == typeof(uint))
                     {
-                        WriteUInt32Array(writer, (uint[])value);
+                        WriteUInt32Array(ctx, (uint[])value);
                     }
                     else if (elementType == typeof(long))
                     {
-                        WriteInt64Array(writer, (long[])value);
+                        WriteInt64Array(ctx, (long[])value);
                     }
                     else if (elementType == typeof(ulong))
                     {
-                        WriteUInt64Array(writer, (ulong[])value);
+                        WriteUInt64Array(ctx, (ulong[])value);
                     }
                     else if (elementType == typeof(double))
                     {
-                        WriteDoubleArray(writer, (double[])value);
+                        WriteDoubleArray(ctx, (double[])value);
                     }
                     else if (elementType == typeof(float))
                     {
-                        WriteFloatArray(writer, (float[])value);
+                        WriteFloatArray(ctx, (float[])value);
                     }
                     else if (elementType == typeof(decimal))
                     {
-                        WriteDecimalArray(writer, (decimal[])value);
+                        WriteDecimalArray(ctx, (decimal[])value);
                     }
 
                     // saveable type
                     else if (typeof(Saveable).IsAssignableFrom(elementType))
                     {
-                        Write(writer, (Saveable[])value);
+                        Write(ctx, (Saveable[])value);
                     }
 
                     // throw error if type is not supported
@@ -281,57 +282,57 @@ namespace SaveableDotNet
                     // primitive data types
                     if (prop.PropertyType == typeof(byte))
                     {
-                        writer.Write((byte)value);
+                        ctx.Writer.Write((byte)value);
                     }
                     else if (prop.PropertyType == typeof(char))
                     {
-                        writer.Write((char)value);
+                        ctx.Writer.Write((char)value);
                     }
                     else if (prop.PropertyType == typeof(string))
                     {
-                        WriteString(writer, (string)value);
+                        WriteString(ctx, (string)value);
                     }
                     else if (prop.PropertyType == typeof(short))
                     {
-                        writer.Write((short)value);
+                        ctx.Writer.Write((short)value);
                     }
                     else if (prop.PropertyType == typeof(ushort))
                     {
-                        writer.Write((ushort)value);
+                        ctx.Writer.Write((ushort)value);
                     }
                     else if (prop.PropertyType == typeof(int))
                     {
-                        writer.Write((int)value);
+                        ctx.Writer.Write((int)value);
                     }
                     else if (prop.PropertyType == typeof(uint))
                     {
-                        writer.Write((uint)value);
+                        ctx.Writer.Write((uint)value);
                     }
                     else if (prop.PropertyType == typeof(long))
                     {
-                        writer.Write((long)value);
+                        ctx.Writer.Write((long)value);
                     }
                     else if (prop.PropertyType == typeof(ulong))
                     {
-                        writer.Write((ulong)value);
+                        ctx.Writer.Write((ulong)value);
                     }
                     else if (prop.PropertyType == typeof(double))
                     {
-                        writer.Write((double)value);
+                        ctx.Writer.Write((double)value);
                     }
                     else if (prop.PropertyType == typeof(float))
                     {
-                        writer.Write((float)value);
+                        ctx.Writer.Write((float)value);
                     }
                     else if (prop.PropertyType == typeof(decimal))
                     {
-                        writer.Write((decimal)value);
+                        ctx.Writer.Write((decimal)value);
                     }
 
                     // saveable type
                     else if (typeof(Saveable).IsAssignableFrom(prop.PropertyType))
                     {
-                        Write(writer, (Saveable)value);
+                        Write(ctx, (Saveable)value);
                     }
 
                     // throw error if type is not supported
@@ -354,23 +355,32 @@ namespace SaveableDotNet
 
         #region Static read methods
         /// <summary>
-        /// Read a <see cref="Saveable"/> from a <see cref="BinaryReader"/>
+        /// Read a <see cref="Saveable"/> from a <see cref="Stream"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static T Read<T>(BinaryReader reader) where T : Saveable
+        public static T Read<T>(Stream stream) where T : Saveable
+        {
+            // Create read context
+            var ctx = new ReadContext(stream);
+
+            // Read saveable
+            return Read<T>(ctx);
+        }
+
+        private static T Read<T>(ReadContext ctx) where T : Saveable
         {
             var saveable = Activator.CreateInstance<T>();
 
             // Update position
-            saveable.position = reader.BaseStream.Position;
+            saveable.position = ctx.Stream.Position;
 
             // Read saveable
-            saveable.Read(reader);
+            saveable.Read(ctx);
 
             // Update length
-            saveable.length = reader.BaseStream.Position - saveable.position;
+            saveable.length = ctx.Stream.Position - saveable.position;
 
             return saveable;
         }
@@ -385,26 +395,32 @@ namespace SaveableDotNet
         {
             using (var stream = new MemoryStream(array))
             {
-                using (var reader = new BinaryReader(stream))
-                {
-                    return Read<T>(reader);
-                }
+                return Read<T>(stream);
             }
         }
 
         /// <summary>
-        /// Read an array of <see cref="Saveable"/> from a <see cref="BinaryReader"/>
+        /// Read an array of <see cref="Saveable"/> from a <see cref="Stream"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static T[] ReadArray<T>(BinaryReader reader) where T : Saveable
+        public static T[] ReadArray<T>(Stream stream) where T : Saveable
         {
-            var array = new T[reader.ReadInt32()];
+            // Create read context
+            var ctx = new ReadContext(stream);
+
+            // Read saveables
+            return ReadArray<T>(ctx);
+        }
+
+        private static T[] ReadArray<T>(ReadContext ctx) where T : Saveable
+        {
+            var array = new T[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = Read<T>(reader);
+                array[i] = Read<T>(ctx);
             }
 
             return array;
@@ -420,17 +436,7 @@ namespace SaveableDotNet
         {
             using (var stream = new MemoryStream(array))
             {
-                using (var reader = new BinaryReader(stream))
-                {
-                    var _array = new T[reader.ReadInt32()];
-
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        _array[i] = Read<T>(reader);
-                    }
-
-                    return _array;
-                }
+                return ReadArray<T>(stream);
             }
         }
 
@@ -438,110 +444,118 @@ namespace SaveableDotNet
         /// Get an enumerator that can be used to iterate over an array of <see cref="Saveable"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="reader"></param>
+        /// <param name="stream"></param>
         /// <returns></returns>
-        public static IEnumerable<T> GetEnumerator<T>(BinaryReader reader) where T : Saveable
+        public static IEnumerable<T> GetEnumerator<T>(Stream stream) where T : Saveable
         {
-            int length = reader.ReadInt32();
+            // Create read context
+            var ctx = new ReadContext(stream);
+
+            return GetEnumerator<T>(ctx);
+        }
+
+        private static IEnumerable<T> GetEnumerator<T>(ReadContext ctx) where T : Saveable
+        {
+            int length = ctx.Reader.ReadInt32();
 
             for (int i = 0; i < length; i++)
             {
-                yield return Read<T>(reader);
+                yield return Read<T>(ctx);
             }
         }
 
         /// <summary>
-        /// Read a byte from a <see cref="BinaryReader"/>
+        /// Read a byte from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static byte ReadByte(BinaryReader reader) => reader.ReadByte();
+        public static byte ReadByte(ReadContext ctx) => ctx.Reader.ReadByte();
 
         /// <summary>
-        /// Read a char from a <see cref="BinaryReader"/>
+        /// Read a char from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctxc"></param>
         /// <returns></returns>
-        public static char ReadChar(BinaryReader reader) => reader.ReadChar();
+        public static char ReadChar(ReadContext ctx) => ctx.Reader.ReadChar();
 
         /// <summary>
-        /// Read a 16-bit signed integer from a <see cref="BinaryReader"/>
+        /// Read a 16-bit signed integer from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static short ReadInt16(BinaryReader reader) => reader.ReadInt16();
+        public static short ReadInt16(ReadContext ctx) => ctx.Reader.ReadInt16();
 
         /// <summary>
-        /// Read a 16-bit unsigned integer from a <see cref="BinaryReader"/>
+        /// Read a 16-bit unsigned integer from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static ushort ReadUInt16(BinaryReader reader) => reader.ReadUInt16();
+        public static ushort ReadUInt16(ReadContext ctx) => ctx.Reader.ReadUInt16();
 
         /// <summary>
-        /// Read a 32-bit signed integer from a <see cref="BinaryReader"/>
+        /// Read a 32-bit signed integer from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static int ReadInt32(BinaryReader reader) => reader.ReadInt32();
+        public static int ReadInt32(ReadContext ctx) => ctx.Reader.ReadInt32();
 
         /// <summary>
-        /// Read a 32-bit unsigned integer from a <see cref="BinaryReader"/>
+        /// Read a 32-bit unsigned integer from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static uint ReadUInt32(BinaryReader reader) => reader.ReadUInt32();
+        public static uint ReadUInt32(ReadContext ctx) => ctx.Reader.ReadUInt32();
 
         /// <summary>
-        /// Read a 64-bit signed integer from a <see cref="BinaryReader"/>
+        /// Read a 64-bit signed integer from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static long ReadInt64(BinaryReader reader) => reader.ReadInt64();
+        public static long ReadInt64(ReadContext ctx) => ctx.Reader.ReadInt64();
 
         /// <summary>
-        /// Read a 64-bit unsigned integer from a <see cref="BinaryReader"/>
+        /// Read a 64-bit unsigned integer from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="Stream"></param>
         /// <returns></returns>
-        public static ulong ReadUInt64(BinaryReader reader) => reader.ReadUInt64();
+        public static ulong ReadUInt64(ReadContext ctx) => ctx.Reader.ReadUInt64();
 
         /// <summary>
-        /// Read a double-precision floating-point value from a <see cref="BinaryReader"/>
+        /// Read a double-precision floating-point value from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static double ReadDouble(BinaryReader reader) => reader.ReadDouble();
+        public static double ReadDouble(ReadContext ctx) => ctx.Reader.ReadDouble();
 
         /// <summary>
-        /// Read a single-precision floating-point value from a <see cref="BinaryReader"/>
+        /// Read a single-precision floating-point value from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static float ReadFloat(BinaryReader reader) => reader.ReadSingle();
+        public static float ReadFloat(ReadContext ctx) => ctx.Reader.ReadSingle();
 
         /// <summary>
-        /// Read a decimal value from a <see cref="BinaryReader"/>
+        /// Read a decimal value from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static decimal ReadDecimal(BinaryReader reader) => reader.ReadDecimal();
+        public static decimal ReadDecimal(ReadContext ctx) => ctx.Reader.ReadDecimal();
 
         /// <summary>
-        /// Read a length-prefixed byte array from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed byte array from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static byte[] ReadByteArray(BinaryReader reader) => reader.ReadBytes(reader.ReadInt32());
+        public static byte[] ReadByteArray(ReadContext ctx) => ctx.Reader.ReadBytes(ctx.Reader.ReadInt32());
 
         /// <summary>
-        /// Read a length-prefixed char array from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed char array from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static char[] ReadCharArray(BinaryReader reader)
+        public static char[] ReadCharArray(ReadContext ctx)
         {
-            var bytes = ReadByteArray(reader);
+            var bytes = ReadByteArray(ctx);
             var array = new char[bytes.Length];
 
             for (int i = 0; i < array.Length; i++)
@@ -553,177 +567,177 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed string from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed string from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static string ReadString(BinaryReader reader) => Encoding.UTF8.GetString(ReadByteArray(reader));
+        public static string ReadString(ReadContext ctx) => Encoding.UTF8.GetString(ReadByteArray(ctx));
 
         /// <summary>
-        /// Read a length-prefixed array of length-prefixed strings from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of length-prefixed strings from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static string[] ReadStringArray(BinaryReader reader)
+        public static string[] ReadStringArray(ReadContext ctx)
         {
-            var array = new string[reader.ReadInt32()];
+            var array = new string[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ReadString(reader);
+                array[i] = ReadString(ctx);
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 16-bit signed integers from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of 16-bit signed integers from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static short[] ReadInt16Array(BinaryReader reader)
+        public static short[] ReadInt16Array(ReadContext ctx)
         {
-            var array = new short[reader.ReadInt32()];
+            var array = new short[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadInt16();
+                array[i] = ctx.Reader.ReadInt16();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 16-bit unsigned integers from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of 16-bit unsigned integers from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static ushort[] ReadUInt16Array(BinaryReader reader)
+        public static ushort[] ReadUInt16Array(ReadContext ctx)
         {
-            var array = new ushort[reader.ReadInt32()];
+            var array = new ushort[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadUInt16();
+                array[i] = ctx.Reader.ReadUInt16();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 32-bit signed integers from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of 32-bit signed integers from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static int[] ReadInt32Array(BinaryReader reader)
+        public static int[] ReadInt32Array(ReadContext ctx)
         {
-            var array = new int[reader.ReadInt32()];
+            var array = new int[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadInt32();
+                array[i] = ctx.Reader.ReadInt32();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 32-bit unsigned integers from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of 32-bit unsigned integers from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static uint[] ReadUInt32Array(BinaryReader reader)
+        public static uint[] ReadUInt32Array(ReadContext ctx)
         {
-            var array = new uint[reader.ReadInt32()];
+            var array = new uint[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadUInt32();
+                array[i] = ctx.Reader.ReadUInt32();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 64-bit signed integers from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of 64-bit signed integers from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static long[] ReadInt64Array(BinaryReader reader)
+        public static long[] ReadInt64Array(ReadContext ctx)
         {
-            var array = new long[reader.ReadInt32()];
+            var array = new long[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadInt64();
+                array[i] = ctx.Reader.ReadInt64();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 64-bit unsigned integers from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of 64-bit unsigned integers from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static ulong[] ReadUInt64Array(BinaryReader reader)
+        public static ulong[] ReadUInt64Array(ReadContext ctx)
         {
-            var array = new ulong[reader.ReadInt32()];
+            var array = new ulong[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadUInt64();
+                array[i] = ctx.Reader.ReadUInt64();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of double-precision floating-point values from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of double-precision floating-point values from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static double[] ReadDoubleArray(BinaryReader reader)
+        public static double[] ReadDoubleArray(ReadContext ctx)
         {
-            var array = new double[reader.ReadInt32()];
+            var array = new double[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadDouble();
+                array[i] = ctx.Reader.ReadDouble();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of single-precision floating-point values from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of single-precision floating-point values from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static float[] ReadFloatArray(BinaryReader reader)
+        public static float[] ReadFloatArray(ReadContext ctx)
         {
-            var array = new float[reader.ReadInt32()];
+            var array = new float[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadSingle();
+                array[i] = ctx.Reader.ReadSingle();
             }
 
             return array;
         }
 
         /// <summary>
-        /// Read a length-prefixed array of decimal values from a <see cref="BinaryReader"/>
+        /// Read a length-prefixed array of decimal values from a <see cref="Stream"/>
         /// </summary>
-        /// <param name="reader"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
-        public static decimal[] ReadDecimalArray(BinaryReader reader)
+        public static decimal[] ReadDecimalArray(ReadContext ctx)
         {
-            var array = new decimal[reader.ReadInt32()];
+            var array = new decimal[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = reader.ReadDecimal();
+                array[i] = ctx.Reader.ReadDecimal();
             }
 
             return array;
@@ -732,34 +746,54 @@ namespace SaveableDotNet
 
         #region Static write methods
         /// <summary>
-        /// Write a <see cref="Saveable"/> to a <see cref="BinaryWriter"/>
+        /// Write a <see cref="Saveable"/> to a <see cref="Stream"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="saveable"></param>
-        public static void Write(BinaryWriter writer, Saveable saveable)
+        public static void Write(Stream stream, Saveable saveable)
         {
-            // Update position
-            saveable.position = writer.BaseStream.Position;
+            // Create write context
+            var ctx = new WriteContext(stream);
 
             // Write saveable
-            saveable.Write(writer);
+            Write(ctx, saveable);
+        }
+
+        private static void Write(WriteContext ctx, Saveable saveable)
+        {
+            // Update position
+            saveable.position = ctx.Stream.Position;
+
+            // Write saveable
+            saveable.Write(ctx);
 
             // Update length
-            saveable.length = writer.BaseStream.Position - saveable.position;
+            saveable.length = ctx.Stream.Position - saveable.position;
         }
 
         /// <summary>
-        /// Write an array of <see cref="Saveable"/> to a <see cref="BinaryWriter"/>
+        /// Write an array of <see cref="Saveable"/> to a <see cref="Stream"/>
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="array"></param>
-        public static void Write(BinaryWriter writer, Saveable[] array)
+        public static void Write(Stream stream, Saveable[] array)
         {
-            writer.Write((int)array.Length);
+            // Create write context
+            var ctx = new WriteContext(stream);
 
+            // Write saveables
+            Write(ctx, array);
+        }
+
+        private static void Write(WriteContext ctx, Saveable[] array)
+        {
+            // Write number of saveables
+            ctx.Writer.Write((int)array.Length);
+
+            // Write saveables
             foreach (var saveable in array)
             {
-                Write(writer, saveable);
+                Write(ctx, saveable);
             }
         }
 
@@ -772,11 +806,7 @@ namespace SaveableDotNet
         {
             using (var stream = new MemoryStream())
             {
-                using (var writer = new BinaryWriter(stream))
-                {
-                    Write(writer, saveable);
-                }
-
+                Write(stream, saveable);
                 return stream.ToArray();
             }
         }
@@ -790,268 +820,293 @@ namespace SaveableDotNet
         {
             using (var stream = new MemoryStream())
             {
-                using (var writer = new BinaryWriter(stream))
-                {
-                    Write(writer, saveable);
-                }
-
+                Write(stream, saveable);
                 return stream.ToArray();
             }
         }
 
         /// <summary>
-        /// Write a byte to a <see cref="BinaryWriter"/>
+        /// Write a byte to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteByte(BinaryWriter writer, byte value) => writer.Write(value);
+        public static void WriteByte(WriteContext ctx, byte value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a char to a <see cref="BinaryWriter"/>
+        /// Write a char to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteChar(BinaryWriter writer, char value) => writer.Write(value);
+        public static void WriteChar(WriteContext ctx, char value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 16-bit signed integer to a <see cref="BinaryWriter"/>
+        /// Write a 16-bit signed integer to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteInt16(BinaryWriter writer, short value) => writer.Write(value);
+        public static void WriteInt16(WriteContext ctx, short value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 16-bit unsigned integer to a <see cref="BinaryWriter"/>
+        /// Write a 16-bit unsigned integer to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteUInt16(BinaryWriter writer, ushort value) => writer.Write(value);
+        public static void WriteUInt16(WriteContext ctx, ushort value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 32-bit signed integer to a <see cref="BinaryWriter"/>
+        /// Write a 32-bit signed integer to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteInt32(BinaryWriter writer, int value) => writer.Write(value);
+        public static void WriteInt32(WriteContext ctx, int value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 32-bit unsigned integer to a <see cref="BinaryWriter"/>
+        /// Write a 32-bit unsigned integer to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteUInt32(BinaryWriter writer, uint value) => writer.Write(value);
+        public static void WriteUInt32(WriteContext ctx, uint value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 64-bit signed integer to a <see cref="BinaryWriter"/>
+        /// Write a 64-bit signed integer to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteInt64(BinaryWriter writer, long value) => writer.Write(value);
+        public static void WriteInt64(WriteContext ctx, long value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 64-bit unsigned integer to a <see cref="BinaryWriter"/>
+        /// Write a 64-bit unsigned integer to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteUInt64(BinaryWriter writer, ulong value) => writer.Write(value);
+        public static void WriteUInt64(WriteContext ctx, ulong value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a double-precision floating-point value to a <see cref="BinaryWriter"/>
+        /// Write a double-precision floating-point value to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteDouble(BinaryWriter writer, double value) => writer.Write(value);
+        public static void WriteDouble(WriteContext ctx, double value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a single-precision floating-point value to a <see cref="BinaryWriter"/>
+        /// Write a single-precision floating-point value to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteFloat(BinaryWriter writer, float value) => writer.Write(value);
+        public static void WriteFloat(WriteContext ctx, float value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a decimal value to a <see cref="BinaryWriter"/>
+        /// Write a decimal value to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteDecimal(BinaryWriter writer, decimal value) => writer.Write(value);
+        public static void WriteDecimal(WriteContext ctx, decimal value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a length-prefixed byte array to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed byte array to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteByteArray(BinaryWriter writer, byte[] array)
+        public static void WriteByteArray(WriteContext ctx, byte[] array)
         {
-            writer.Write((int)array.Length);
-            writer.Write(array);
+            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array);
         }
 
         /// <summary>
-        /// Write a length-prefixed char array to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed char array to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteCharArray(BinaryWriter writer, char[] array)
+        public static void WriteCharArray(WriteContext ctx, char[] array)
         {
-            writer.Write((int)array.Length);
-            writer.Write(array);
+            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array);
         }
 
         /// <summary>
-        /// Write a length-prefixed string to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed string to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteString(BinaryWriter writer, string value) => WriteByteArray(writer, Encoding.UTF8.GetBytes(value));
+        public static void WriteString(WriteContext ctx, string value) => WriteByteArray(ctx, Encoding.UTF8.GetBytes(value));
 
         /// <summary>
-        /// Write a length-prefixed array of length-prefixed strings to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of length-prefixed strings to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteStringArray(BinaryWriter writer, string[] array)
+        public static void WriteStringArray(WriteContext ctx, string[] array)
         {
-            writer.Write((int)array.Length);
+            ctx.Writer.Write((int)array.Length);
 
             foreach (var value in array)
             {
-                WriteString(writer, value);
+                WriteString(ctx, value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 16-bit signed integers to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 16-bit signed integers to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteInt16Array(BinaryWriter writer, short[] array)
+        public static void WriteInt16Array(WriteContext ctx, short[] array)
         {
-            writer.Write((int)array.Length);
+            ctx.Writer.Write((int)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 16-bit unsigned integers to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 16-bit unsigned integers to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteUInt16Array(BinaryWriter writer, ushort[] array)
+        public static void WriteUInt16Array(WriteContext ctx, ushort[] array)
         {
-            writer.Write((int)array.Length);
+            ctx.Writer.Write((int)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 32-bit signed integers to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 32-bit signed integers to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteInt32Array(BinaryWriter writer, int[] array)
+        public static void WriteInt32Array(WriteContext ctx, int[] array)
         {
-            writer.Write((int)array.Length);
+            ctx.Writer.Write((int)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 32-bit unsigned integers to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 32-bit unsigned integers to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteUInt32Array(BinaryWriter writer, uint[] array)
+        public static void WriteUInt32Array(WriteContext ctx, uint[] array)
         {
-            writer.Write((uint)array.Length);
+            ctx.Writer.Write((uint)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 64-bit signed integers to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 64-bit signed integers to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteInt64Array(BinaryWriter writer, long[] array)
+        public static void WriteInt64Array(WriteContext ctx, long[] array)
         {
-            writer.Write((int)array.Length);
+            ctx.Writer.Write((int)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 64-bit unsigned integers to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of 64-bit unsigned integers to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteUInt64Array(BinaryWriter writer, ulong[] array)
+        public static void WriteUInt64Array(WriteContext ctx, ulong[] array)
         {
-            writer.Write((uint)array.Length);
+            ctx.Writer.Write((uint)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of double-precision floating-point values to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of double-precision floating-point values to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteDoubleArray(BinaryWriter writer, double[] array)
+        public static void WriteDoubleArray(WriteContext ctx, double[] array)
         {
-            writer.Write((uint)array.Length);
+            ctx.Writer.Write((uint)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of single-precision floating-point values to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of single-precision floating-point values to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteFloatArray(BinaryWriter writer, float[] array)
+        public static void WriteFloatArray(WriteContext ctx, float[] array)
         {
-            writer.Write((uint)array.Length);
+            ctx.Writer.Write((uint)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
             }
         }
 
         /// <summary>
-        /// Write a length-prefixed array of decimal values to a <see cref="BinaryWriter"/>
+        /// Write a length-prefixed array of decimal values to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteDecimalArray(BinaryWriter writer, decimal[] array)
+        public static void WriteDecimalArray(WriteContext ctx, decimal[] array)
         {
-            writer.Write((uint)array.Length);
+            ctx.Writer.Write((uint)array.Length);
 
             foreach (var value in array)
             {
-                writer.Write(value);
+                ctx.Writer.Write(value);
+            }
+        }
+        #endregion
+
+        #region Subclasses
+        public class Context
+        {
+            public Stream Stream;
+        }
+
+        public class ReadContext : Context
+        {
+            public BinaryReader Reader;
+
+            public ReadContext(Stream stream)
+            {
+                Stream = stream;
+                Reader = new BinaryReader(stream);
+            }
+        }
+
+        public class WriteContext : Context
+        {
+            public BinaryWriter Writer;
+
+            public WriteContext(Stream stream)
+            {
+                Stream = stream;
+                Writer = new BinaryWriter(stream);
             }
         }
         #endregion

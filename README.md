@@ -51,18 +51,18 @@ class Fruit : Saveable
         return new Fruit(value);
     }
 
-    protected override void Read(BinaryReader reader)
+    protected override void Read(ReadContext ctx)
     {
         // You can still call the base method to automatically 
         // read properties with Saveable attribute
-        Name = ReadString(reader);
+        Name = ReadString(ctx);
     }
 
-    protected override void Write(BinaryWriter writer)
+    protected override void Write(WriteContext ctx)
     {
         // You can still call the base method to automatically 
         // write properties with Saveable attribute
-        WriteString(writer, Name);
+        WriteString(ctx, Name);
     }
 }
 ```
@@ -77,18 +77,14 @@ var fruits = new Fruit[] {
 };
 
 var stream = File.Open("Fruits.bin", FileMode.Create, FileAccess.Write);
-var writer = new BinaryWriter(stream);
-
-Saveable.Write(writer, fruits);
+Saveable.Write(stream, fruits);
 ```
 
 ## Reading a Saveable from a binary file
 
 ```cs
 var stream = File.Open("Fruits.bin", FileMode.Open, FileAccess.Read);
-var reader = new BinaryReader(stream);
-
-var fruits = Saveable.ReadArray<Fruit>(reader);
+var fruits = Saveable.ReadArray<Fruit>(stream);
 
 foreach (var fruit in fruits)
 {
