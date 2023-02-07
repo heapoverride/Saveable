@@ -1134,6 +1134,11 @@ namespace SaveableDotNet
             {
                 Reader = new BinaryReader(stream);
             }
+
+            public ReadContext(BinaryReader reader) : base(reader.BaseStream)
+            {
+                Reader = reader;
+            }
         }
 
         /// <summary>
@@ -1149,6 +1154,11 @@ namespace SaveableDotNet
             public WriteContext(Stream stream) : base(stream)
             {
                 Writer = new BinaryWriter(stream);
+            }
+
+            public WriteContext(BinaryWriter writer) : base(writer.BaseStream)
+            {
+                Writer = writer;
             }
         }
         #endregion
