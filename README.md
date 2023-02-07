@@ -131,3 +131,18 @@ var fruits = Saveable.ReadArray<Fruit>(new byte[] {
     0x4D, 0x61, 0x6E, 0x67, 0x6F         // name = "Mango"
 });
 ```
+
+### Using Read and Write contexts
+This is just an another way to use Saveable. Read and Write contexts implement the `IDisposable` interface. Use the `using` syntax unless you have a good reason not to. I've deciced not to use it in these examples because GitHub's syntax highlighting doesn't understand it.
+
+```cs
+// Write to file
+var stream = File.Open("Strings.bin", FileMode.Create, FileAccess.Write);
+var ctx = new Saveable.WriteContext(stream);
+Saveable.WriteString(ctx, "Hello, world!");
+
+// Read from file
+var stream = File.Open("Strings.bin", FileMode.Open, FileAccess.Read);
+var ctx = new Saveable.ReadContext(stream);
+Console.WriteLine(Saveable.ReadString(ctx)); // "Hello, world!"
+```
