@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 
 namespace SaveableDotNet
@@ -358,7 +357,7 @@ namespace SaveableDotNet
         /// Read a <see cref="Saveable"/> from a <see cref="Stream"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="reader"></param>
+        /// <param name="stream"></param>
         /// <returns></returns>
         public static T Read<T>(Stream stream) where T : Saveable
         {
@@ -403,7 +402,7 @@ namespace SaveableDotNet
         /// Read an array of <see cref="Saveable"/> from a <see cref="Stream"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="reader"></param>
+        /// <param name="stream"></param>
         /// <returns></returns>
         public static T[] ReadArray<T>(Stream stream) where T : Saveable
         {
