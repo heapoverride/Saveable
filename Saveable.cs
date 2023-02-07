@@ -27,7 +27,7 @@ namespace SaveableDotNet
 
         #region Overridable protected virtual instance methods
         /// <summary>
-        /// Read a <see cref="Saveable"/> from a <see cref="Stream"/>
+        /// Read a <see cref="Saveable"/> from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         protected virtual void Read(ReadContext ctx)
@@ -191,7 +191,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a <see cref="Saveable"/> to a <see cref="Stream"/>
+        /// Write a <see cref="Saveable"/> to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         protected virtual void Write(WriteContext ctx)
@@ -368,7 +368,13 @@ namespace SaveableDotNet
             return Read<T>(ctx);
         }
 
-        private static T Read<T>(ReadContext ctx) where T : Saveable
+        /// <summary>
+        /// Read a <see cref="Saveable"/> from a <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static T Read<T>(ReadContext ctx) where T : Saveable
         {
             var saveable = Activator.CreateInstance<T>();
 
@@ -413,7 +419,7 @@ namespace SaveableDotNet
             return ReadArray<T>(ctx);
         }
 
-        private static T[] ReadArray<T>(ReadContext ctx) where T : Saveable
+        public static T[] ReadArray<T>(ReadContext ctx) where T : Saveable
         {
             var array = new T[ctx.Reader.ReadInt32()];
 
@@ -440,7 +446,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Get an enumerator that can be used to iterate over an array of <see cref="Saveable"/>
+        /// Get an enumerator from a <see cref="Stream"/> that can be used to iterate over an array of <see cref="Saveable"/>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="stream"></param>
@@ -453,7 +459,13 @@ namespace SaveableDotNet
             return GetEnumerator<T>(ctx);
         }
 
-        private static IEnumerable<T> GetEnumerator<T>(ReadContext ctx) where T : Saveable
+        /// <summary>
+        /// Get an enumerator from a <see cref="ReadContext"/> that can be used to iterate over an array of <see cref="Saveable"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetEnumerator<T>(ReadContext ctx) where T : Saveable
         {
             int length = ctx.Reader.ReadInt32();
 
@@ -464,91 +476,91 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a byte from a <see cref="Stream"/>
+        /// Read a byte from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static byte ReadByte(ReadContext ctx) => ctx.Reader.ReadByte();
 
         /// <summary>
-        /// Read a char from a <see cref="Stream"/>
+        /// Read a char from a <see cref="ReadContext"/>
         /// </summary>
-        /// <param name="ctxc"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
         public static char ReadChar(ReadContext ctx) => ctx.Reader.ReadChar();
 
         /// <summary>
-        /// Read a 16-bit signed integer from a <see cref="Stream"/>
+        /// Read a 16-bit signed integer from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static short ReadInt16(ReadContext ctx) => ctx.Reader.ReadInt16();
 
         /// <summary>
-        /// Read a 16-bit unsigned integer from a <see cref="Stream"/>
+        /// Read a 16-bit unsigned integer from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static ushort ReadUInt16(ReadContext ctx) => ctx.Reader.ReadUInt16();
 
         /// <summary>
-        /// Read a 32-bit signed integer from a <see cref="Stream"/>
+        /// Read a 32-bit signed integer from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static int ReadInt32(ReadContext ctx) => ctx.Reader.ReadInt32();
 
         /// <summary>
-        /// Read a 32-bit unsigned integer from a <see cref="Stream"/>
+        /// Read a 32-bit unsigned integer from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static uint ReadUInt32(ReadContext ctx) => ctx.Reader.ReadUInt32();
 
         /// <summary>
-        /// Read a 64-bit signed integer from a <see cref="Stream"/>
+        /// Read a 64-bit signed integer from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static long ReadInt64(ReadContext ctx) => ctx.Reader.ReadInt64();
 
         /// <summary>
-        /// Read a 64-bit unsigned integer from a <see cref="Stream"/>
+        /// Read a 64-bit unsigned integer from a <see cref="ReadContext"/>
         /// </summary>
-        /// <param name="Stream"></param>
+        /// <param name="ctx"></param>
         /// <returns></returns>
         public static ulong ReadUInt64(ReadContext ctx) => ctx.Reader.ReadUInt64();
 
         /// <summary>
-        /// Read a double-precision floating-point value from a <see cref="Stream"/>
+        /// Read a double-precision floating-point value from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static double ReadDouble(ReadContext ctx) => ctx.Reader.ReadDouble();
 
         /// <summary>
-        /// Read a single-precision floating-point value from a <see cref="Stream"/>
+        /// Read a single-precision floating-point value from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static float ReadFloat(ReadContext ctx) => ctx.Reader.ReadSingle();
 
         /// <summary>
-        /// Read a decimal value from a <see cref="Stream"/>
+        /// Read a decimal value from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static decimal ReadDecimal(ReadContext ctx) => ctx.Reader.ReadDecimal();
 
         /// <summary>
-        /// Read a length-prefixed byte array from a <see cref="Stream"/>
+        /// Read a length-prefixed byte array from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static byte[] ReadByteArray(ReadContext ctx) => ctx.Reader.ReadBytes(ctx.Reader.ReadInt32());
 
         /// <summary>
-        /// Read a length-prefixed char array from a <see cref="Stream"/>
+        /// Read a length-prefixed char array from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -566,14 +578,14 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed string from a <see cref="Stream"/>
+        /// Read a length-prefixed string from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static string ReadString(ReadContext ctx) => Encoding.UTF8.GetString(ReadByteArray(ctx));
 
         /// <summary>
-        /// Read a length-prefixed array of length-prefixed strings from a <see cref="Stream"/>
+        /// Read a length-prefixed array of length-prefixed strings from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -590,7 +602,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 16-bit signed integers from a <see cref="Stream"/>
+        /// Read a length-prefixed array of 16-bit signed integers from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -607,7 +619,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 16-bit unsigned integers from a <see cref="Stream"/>
+        /// Read a length-prefixed array of 16-bit unsigned integers from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -624,7 +636,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 32-bit signed integers from a <see cref="Stream"/>
+        /// Read a length-prefixed array of 32-bit signed integers from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -641,7 +653,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 32-bit unsigned integers from a <see cref="Stream"/>
+        /// Read a length-prefixed array of 32-bit unsigned integers from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -658,7 +670,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 64-bit signed integers from a <see cref="Stream"/>
+        /// Read a length-prefixed array of 64-bit signed integers from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -675,7 +687,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of 64-bit unsigned integers from a <see cref="Stream"/>
+        /// Read a length-prefixed array of 64-bit unsigned integers from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -692,7 +704,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of double-precision floating-point values from a <see cref="Stream"/>
+        /// Read a length-prefixed array of double-precision floating-point values from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -709,7 +721,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of single-precision floating-point values from a <see cref="Stream"/>
+        /// Read a length-prefixed array of single-precision floating-point values from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -726,7 +738,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Read a length-prefixed array of decimal values from a <see cref="Stream"/>
+        /// Read a length-prefixed array of decimal values from a <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
@@ -747,7 +759,7 @@ namespace SaveableDotNet
         /// <summary>
         /// Write a <see cref="Saveable"/> to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="stream"></param>
         /// <param name="saveable"></param>
         public static void Write(Stream stream, Saveable saveable)
         {
@@ -758,7 +770,12 @@ namespace SaveableDotNet
             Write(ctx, saveable);
         }
 
-        private static void Write(WriteContext ctx, Saveable saveable)
+        /// <summary>
+        /// Write a <see cref="Saveable"/> to a <see cref="WriteContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="saveable"></param>
+        public static void Write(WriteContext ctx, Saveable saveable)
         {
             // Update position
             saveable.position = ctx.Stream.Position;
@@ -773,7 +790,7 @@ namespace SaveableDotNet
         /// <summary>
         /// Write an array of <see cref="Saveable"/> to a <see cref="Stream"/>
         /// </summary>
-        /// <param name="writer"></param>
+        /// <param name="stream"></param>
         /// <param name="array"></param>
         public static void Write(Stream stream, Saveable[] array)
         {
@@ -784,7 +801,12 @@ namespace SaveableDotNet
             Write(ctx, array);
         }
 
-        private static void Write(WriteContext ctx, Saveable[] array)
+        /// <summary>
+        /// Write an array of <see cref="Saveable"/> to a <see cref="WriteContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="array"></param>
+        public static void Write(WriteContext ctx, Saveable[] array)
         {
             // Write number of saveables
             ctx.Writer.Write((int)array.Length);
@@ -825,84 +847,84 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a byte to a <see cref="Stream"/>
+        /// Write a byte to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteByte(WriteContext ctx, byte value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a char to a <see cref="Stream"/>
+        /// Write a char to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteChar(WriteContext ctx, char value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 16-bit signed integer to a <see cref="Stream"/>
+        /// Write a 16-bit signed integer to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteInt16(WriteContext ctx, short value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 16-bit unsigned integer to a <see cref="Stream"/>
+        /// Write a 16-bit unsigned integer to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteUInt16(WriteContext ctx, ushort value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 32-bit signed integer to a <see cref="Stream"/>
+        /// Write a 32-bit signed integer to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteInt32(WriteContext ctx, int value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 32-bit unsigned integer to a <see cref="Stream"/>
+        /// Write a 32-bit unsigned integer to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteUInt32(WriteContext ctx, uint value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 64-bit signed integer to a <see cref="Stream"/>
+        /// Write a 64-bit signed integer to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteInt64(WriteContext ctx, long value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a 64-bit unsigned integer to a <see cref="Stream"/>
+        /// Write a 64-bit unsigned integer to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteUInt64(WriteContext ctx, ulong value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a double-precision floating-point value to a <see cref="Stream"/>
+        /// Write a double-precision floating-point value to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteDouble(WriteContext ctx, double value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a single-precision floating-point value to a <see cref="Stream"/>
+        /// Write a single-precision floating-point value to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteFloat(WriteContext ctx, float value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a decimal value to a <see cref="Stream"/>
+        /// Write a decimal value to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteDecimal(WriteContext ctx, decimal value) => ctx.Writer.Write(value);
 
         /// <summary>
-        /// Write a length-prefixed byte array to a <see cref="Stream"/>
+        /// Write a length-prefixed byte array to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -913,7 +935,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed char array to a <see cref="Stream"/>
+        /// Write a length-prefixed char array to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -924,14 +946,14 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed string to a <see cref="Stream"/>
+        /// Write a length-prefixed string to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void WriteString(WriteContext ctx, string value) => WriteByteArray(ctx, Encoding.UTF8.GetBytes(value));
 
         /// <summary>
-        /// Write a length-prefixed array of length-prefixed strings to a <see cref="Stream"/>
+        /// Write a length-prefixed array of length-prefixed strings to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -946,7 +968,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 16-bit signed integers to a <see cref="Stream"/>
+        /// Write a length-prefixed array of 16-bit signed integers to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -961,7 +983,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 16-bit unsigned integers to a <see cref="Stream"/>
+        /// Write a length-prefixed array of 16-bit unsigned integers to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -976,7 +998,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 32-bit signed integers to a <see cref="Stream"/>
+        /// Write a length-prefixed array of 32-bit signed integers to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -991,7 +1013,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 32-bit unsigned integers to a <see cref="Stream"/>
+        /// Write a length-prefixed array of 32-bit unsigned integers to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -1006,7 +1028,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 64-bit signed integers to a <see cref="Stream"/>
+        /// Write a length-prefixed array of 64-bit signed integers to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -1021,7 +1043,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of 64-bit unsigned integers to a <see cref="Stream"/>
+        /// Write a length-prefixed array of 64-bit unsigned integers to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -1036,7 +1058,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of double-precision floating-point values to a <see cref="Stream"/>
+        /// Write a length-prefixed array of double-precision floating-point values to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -1051,7 +1073,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of single-precision floating-point values to a <see cref="Stream"/>
+        /// Write a length-prefixed array of single-precision floating-point values to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -1066,7 +1088,7 @@ namespace SaveableDotNet
         }
 
         /// <summary>
-        /// Write a length-prefixed array of decimal values to a <see cref="Stream"/>
+        /// Write a length-prefixed array of decimal values to a <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
@@ -1082,29 +1104,50 @@ namespace SaveableDotNet
         #endregion
 
         #region Subclasses
+        /// <summary>
+        /// Context base class
+        /// </summary>
         public class Context
         {
-            public Stream Stream;
-        }
+            /// <summary>
+            /// Gets the base stream associated with this <see cref="Context"/>
+            /// </summary>
+            public Stream Stream { get; }
 
-        public class ReadContext : Context
-        {
-            public BinaryReader Reader;
-
-            public ReadContext(Stream stream)
+            public Context(Stream stream)
             {
                 Stream = stream;
+            }
+        }
+
+        /// <summary>
+        /// Read context
+        /// </summary>
+        public class ReadContext : Context
+        {
+            /// <summary>
+            /// Gets the <see cref="BinaryReader"/> associated with this <see cref="ReadContext"/>
+            /// </summary>
+            public BinaryReader Reader { get; }
+
+            public ReadContext(Stream stream) : base(stream)
+            {
                 Reader = new BinaryReader(stream);
             }
         }
 
+        /// <summary>
+        /// Write context
+        /// </summary>
         public class WriteContext : Context
         {
-            public BinaryWriter Writer;
+            /// <summary>
+            /// Gets the <see cref="BinaryWriter"/> associated with this <see cref="WriteContext"/>
+            /// </summary>
+            public BinaryWriter Writer { get; }
 
-            public WriteContext(Stream stream)
+            public WriteContext(Stream stream) : base(stream)
             {
-                Stream = stream;
                 Writer = new BinaryWriter(stream);
             }
         }
