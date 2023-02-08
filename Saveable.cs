@@ -1115,6 +1115,10 @@ namespace SaveableDotNet
             /// </summary>
             public Stream Stream { get; }
 
+            /// <summary>
+            /// Initializes a new <see cref="Context"/> that acts as a wrapper for <see cref="System.IO.Stream"/>
+            /// </summary>
+            /// <param name="stream"></param>
             public Context(Stream stream)
             {
                 Stream = stream;
@@ -1136,11 +1140,19 @@ namespace SaveableDotNet
             /// </summary>
             public BinaryReader Reader { get; }
 
+            /// <summary>
+            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
+            /// </summary>
+            /// <param name="stream"></param>
             public ReadContext(Stream stream) : base(stream)
             {
                 Reader = new BinaryReader(stream);
             }
 
+            /// <summary>
+            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
+            /// </summary>
+            /// <param name="reader"></param>
             public ReadContext(BinaryReader reader) : base(reader.BaseStream)
             {
                 Reader = reader;
@@ -1162,11 +1174,19 @@ namespace SaveableDotNet
             /// </summary>
             public BinaryWriter Writer { get; }
 
+            /// <summary>
+            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
+            /// </summary>
+            /// <param name="stream"></param>
             public WriteContext(Stream stream) : base(stream)
             {
                 Writer = new BinaryWriter(stream);
             }
 
+            /// <summary>
+            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
+            /// </summary>
+            /// <param name="writer"></param>
             public WriteContext(BinaryWriter writer) : base(writer.BaseStream)
             {
                 Writer = writer;
