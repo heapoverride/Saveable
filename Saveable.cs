@@ -203,6 +203,11 @@ namespace SaveableDotNet
 
                 object value = prop.GetValue(this);
 
+                if (value == null)
+                {
+                    throw new Exception("Property must have a value at this time.");
+                }
+
                 if (prop.PropertyType.IsArray)
                 {
                     if (prop.PropertyType.GetArrayRank() != 1)
@@ -419,6 +424,12 @@ namespace SaveableDotNet
             return ReadArray<T>(ctx);
         }
 
+        /// <summary>
+        /// Read an array of <see cref="Saveable"/> from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
         public static T[] ReadArray<T>(ReadContext ctx) where T : Saveable
         {
             var array = new T[ctx.Reader.ReadInt32()];
