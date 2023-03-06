@@ -501,6 +501,13 @@ namespace SaveableDotNet
         public static char ReadChar(ReadContext ctx) => ctx.Reader.ReadChar();
 
         /// <summary>
+        /// Read a boolean value from <see cref="ReadContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static bool ReadBoolean(ReadContext ctx) => ctx.Reader.ReadBoolean();
+
+        /// <summary>
         /// Read a 16-bit signed integer from <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
@@ -577,12 +584,11 @@ namespace SaveableDotNet
         /// <returns></returns>
         public static char[] ReadCharArray(ReadContext ctx)
         {
-            var bytes = ReadByteArray(ctx);
-            var array = new char[bytes.Length];
+            var array = new char[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = (char)bytes[i];
+                array[i] = ctx.Reader.ReadChar();
             }
 
             return array;
@@ -872,6 +878,13 @@ namespace SaveableDotNet
         public static void WriteChar(WriteContext ctx, char value) => ctx.Writer.Write(value);
 
         /// <summary>
+        /// Write a boolean value to <see cref="WriteContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="value"></param>
+        public static void WriteBoolean(WriteContext ctx, bool value) => ctx.Writer.Write(value);
+
+        /// <summary>
         /// Write a 16-bit signed integer to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
@@ -954,6 +967,21 @@ namespace SaveableDotNet
         {
             ctx.Writer.Write((int)array.Length);
             ctx.Writer.Write(array);
+        }
+
+        /// <summary>
+        /// Write a length-prefixed boolean array to <see cref="WriteContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="array"></param>
+        public static void WriteBooleanArray(WriteContext ctx, bool[] array)
+        {
+            ctx.Writer.Write((int)array.Length);
+
+            foreach (var value in array)
+            {
+                WriteBoolean(ctx, value);
+            }
         }
 
         /// <summary>
