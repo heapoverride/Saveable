@@ -133,7 +133,7 @@ var fruits = Saveable.ReadArray<Fruit>(new byte[] {
 ```
 
 ### Using Read and Write contexts
-This is just an another way to use Saveable. Read and Write contexts implement the `IDisposable` interface. Use the `using` syntax unless you have a good reason not to. I've deciced not to use it in these examples because GitHub's syntax highlighting doesn't understand it.
+This is just an another way to use Saveable. Read and Write contexts implement the `IDisposable` interface. Use the `using` syntax unless you have a good reason not to. I've decided not to use it in these examples because GitHub's syntax highlighting doesn't understand it.
 
 ```cs
 // Write to file
