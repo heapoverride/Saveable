@@ -523,63 +523,40 @@ namespace SaveableDotNet
                 var elementType = type.GetElementType();
 
                 // Arrays of primitive data types
-                if (elementType == typeof(byte))
+                switch (Type.GetTypeCode(elementType))
                 {
-                    return ReadByteArray(ctx);
-                }
-                else if (elementType == typeof(char))
-                {
-                    return ReadCharArray(ctx);
-                }
-                else if (elementType == typeof(bool))
-                {
-                    return ReadBooleanArray(ctx);
-                }
-                else if (elementType == typeof(string))
-                {
-                    return ReadStringArray(ctx);
-                }
-                else if (elementType == typeof(short))
-                {
-                    return ReadInt16Array(ctx);
-                }
-                else if (elementType == typeof(ushort))
-                {
-                    return ReadUInt16Array(ctx);
-                }
-                else if (elementType == typeof(int))
-                {
-                    return ReadInt32Array(ctx);
-                }
-                else if (elementType == typeof(uint))
-                {
-                    return ReadUInt32Array(ctx);
-                }
-                else if (elementType == typeof(long))
-                {
-                    return ReadInt64Array(ctx);
-                }
-                else if (elementType == typeof(ulong))
-                {
-                    return ReadUInt64Array(ctx);
-                }
-                else if (elementType == typeof(double))
-                {
-                    return ReadDoubleArray(ctx);
-                }
-                else if (elementType == typeof(float))
-                {
-                    return ReadFloatArray(ctx);
-                }
-                else if (elementType == typeof(decimal))
-                {
-                    return ReadDecimalArray(ctx);
+                    case TypeCode.Byte:
+                        return ReadByteArray(ctx);
+                    case TypeCode.Char:
+                        return ReadCharArray(ctx);
+                    case TypeCode.Boolean:
+                        return ReadBooleanArray(ctx);
+                    case TypeCode.String:
+                        return ReadStringArray(ctx);
+                    case TypeCode.Int16:
+                        return ReadInt16Array(ctx);
+                    case TypeCode.UInt16:
+                        return ReadUInt16Array(ctx);
+                    case TypeCode.Int32:
+                        return ReadInt32Array(ctx);
+                    case TypeCode.UInt32:
+                        return ReadUInt32Array(ctx);
+                    case TypeCode.Int64:
+                        return ReadInt64Array(ctx);
+                    case TypeCode.UInt64:
+                        return ReadUInt64Array(ctx);
+                    case TypeCode.Double:
+                        return ReadDoubleArray(ctx);
+                    case TypeCode.Single:
+                        return ReadFloatArray(ctx);
+                    case TypeCode.Decimal:
+                        return ReadDecimalArray(ctx);
                 }
 
                 // Saveable type
-                else if (typeof(Saveable).IsAssignableFrom(elementType))
+                if (typeof(Saveable).IsAssignableFrom(elementType))
                 {
-                    var array = Array.CreateInstance(elementType, ctx.Reader.ReadInt32());
+                    var array = Array.CreateInstance(elementType, ReadInt32(ctx));
 
                     for (int i = 0; i < array.Length; i++)
                     {
@@ -597,61 +574,38 @@ namespace SaveableDotNet
                 // Non-array type
 
                 // Primitive data types
-                if (type == typeof(byte))
+                switch (Type.GetTypeCode(type))
                 {
-                    return ReadByte(ctx);
-                }
-                else if (type == typeof(char))
-                {
-                    return ReadChar(ctx);
-                }
-                else if (type == typeof(bool))
-                {
-                    return ReadBoolean(ctx);
-                }
-                else if (type == typeof(string))
-                {
-                    return ReadString(ctx);
-                }
-                else if (type == typeof(short))
-                {
-                    return ReadInt16(ctx);
-                }
-                else if (type == typeof(ushort))
-                {
-                    return ReadUInt16(ctx);
-                }
-                else if (type == typeof(int))
-                {
-                    return ReadInt32(ctx);
-                }
-                else if (type == typeof(uint))
-                {
-                    return ReadUInt32(ctx);
-                }
-                else if (type == typeof(long))
-                {
-                    return ReadInt64(ctx);
-                }
-                else if (type == typeof(ulong))
-                {
-                    return ReadUInt64(ctx);
-                }
-                else if (type == typeof(double))
-                {
-                    return ReadDouble(ctx);
-                }
-                else if (type == typeof(float))
-                {
-                    return ReadFloat(ctx);
-                }
-                else if (type == typeof(decimal))
-                {
-                    return ReadDecimal(ctx);
+                    case TypeCode.Byte:
+                        return ReadByte(ctx);
+                    case TypeCode.Char:
+                        return ReadChar(ctx);
+                    case TypeCode.Boolean:
+                        return ReadBoolean(ctx);
+                    case TypeCode.String:
+                        return ReadString(ctx);
+                    case TypeCode.Int16:
+                        return ReadInt16(ctx);
+                    case TypeCode.UInt16:
+                        return ReadUInt16(ctx);
+                    case TypeCode.Int32:
+                        return ReadInt32(ctx);
+                    case TypeCode.UInt32:
+                        return ReadUInt32(ctx);
+                    case TypeCode.Int64:
+                        return ReadInt64(ctx);
+                    case TypeCode.UInt64:
+                        return ReadUInt64(ctx);
+                    case TypeCode.Double:
+                        return ReadDouble(ctx);
+                    case TypeCode.Single:
+                        return ReadFloat(ctx);
+                    case TypeCode.Decimal:
+                        return ReadDecimal(ctx);
                 }
 
                 // Saveable type
-                else if (typeof(Saveable).IsAssignableFrom(type))
+                if (typeof(Saveable).IsAssignableFrom(type))
                 {
                     var saveableObject = Activator.CreateInstance(type);
                     ((Saveable)saveableObject).Read(ctx);
@@ -1052,74 +1006,51 @@ namespace SaveableDotNet
                 var elementType = type.GetElementType();
 
                 // Arrays of primitive data types
-                if (elementType == typeof(byte))
+                switch (Type.GetTypeCode(elementType))
                 {
-                    WriteByteArray(ctx, (byte[])value);
-                    return;
-                }
-                else if (elementType == typeof(char))
-                {
-                    WriteCharArray(ctx, (char[])value);
-                    return;
-                }
-                else if (elementType == typeof(bool))
-                {
-                    WriteBooleanArray(ctx, (bool[])value);
-                    return;
-                }
-                else if (elementType == typeof(string))
-                {
-                    WriteStringArray(ctx, (string[])value);
-                    return;
-                }
-                else if (elementType == typeof(short))
-                {
-                    WriteInt16Array(ctx, (short[])value);
-                    return;
-                }
-                else if (elementType == typeof(ushort))
-                {
-                    WriteUInt16Array(ctx, (ushort[])value);
-                    return;
-                }
-                else if (elementType == typeof(int))
-                {
-                    WriteInt32Array(ctx, (int[])value);
-                    return;
-                }
-                else if (elementType == typeof(uint))
-                {
-                    WriteUInt32Array(ctx, (uint[])value);
-                    return;
-                }
-                else if (elementType == typeof(long))
-                {
-                    WriteInt64Array(ctx, (long[])value);
-                    return;
-                }
-                else if (elementType == typeof(ulong))
-                {
-                    WriteUInt64Array(ctx, (ulong[])value);
-                    return;
-                }
-                else if (elementType == typeof(double))
-                {
-                    WriteDoubleArray(ctx, (double[])value);
-                    return;
-                }
-                else if (elementType == typeof(float))
-                {
-                    WriteFloatArray(ctx, (float[])value);
-                    return;
-                }
-                else if (elementType == typeof(decimal))
-                {
-                    WriteDecimalArray(ctx, (decimal[])value);
-                    return;
+                    case TypeCode.Byte:
+                        WriteByteArray(ctx, (byte[])value);
+                        return;
+                    case TypeCode.Char:
+                        WriteCharArray(ctx, (char[])value);
+                        return;
+                    case TypeCode.Boolean:
+                        WriteBooleanArray(ctx, (bool[])value);
+                        return;
+                    case TypeCode.String:
+                        WriteStringArray(ctx, (string[])value);
+                        return;
+                    case TypeCode.Int16:
+                        WriteInt16Array(ctx, (short[])value);
+                        return;
+                    case TypeCode.UInt16:
+                        WriteUInt16Array(ctx, (ushort[])value);
+                        return;
+                    case TypeCode.Int32:
+                        WriteInt32Array(ctx, (int[])value);
+                        return;
+                    case TypeCode.UInt32:
+                        WriteUInt32Array(ctx, (uint[])value);
+                        return;
+                    case TypeCode.Int64:
+                        WriteInt64Array(ctx, (long[])value);
+                        return;
+                    case TypeCode.UInt64:
+                        WriteUInt64Array(ctx, (ulong[])value);
+                        return;
+                    case TypeCode.Double:
+                        WriteDoubleArray(ctx, (double[])value);
+                        return;
+                    case TypeCode.Single:
+                        WriteFloatArray(ctx, (float[])value);
+                        return;
+                    case TypeCode.Decimal:
+                        WriteDecimalArray(ctx, (decimal[])value);
+                        return;
                 }
 
                 // Saveable type
-                else if (typeof(Saveable).IsAssignableFrom(elementType))
+                if (typeof(Saveable).IsAssignableFrom(elementType))
                 {
                     Write(ctx, (Saveable[])value);
                     return;
@@ -1130,74 +1061,51 @@ namespace SaveableDotNet
                 // Non-array type
 
                 // Primitive data types
-                if (type == typeof(byte))
+                switch (Type.GetTypeCode(type))
                 {
-                    WriteByte(ctx, (byte)value);
-                    return;
-                }
-                else if (type == typeof(char))
-                {
-                    WriteChar(ctx, (char)value);
-                    return;
-                }
-                else if (type == typeof(bool))
-                {
-                    WriteBoolean(ctx, (bool)value);
-                    return;
-                }
-                else if (type == typeof(string))
-                {
-                    WriteString(ctx, (string)value);
-                    return;
-                }
-                else if (type == typeof(short))
-                {
-                    WriteInt16(ctx, (short)value);
-                    return;
-                }
-                else if (type == typeof(ushort))
-                {
-                    WriteUInt16(ctx, (ushort)value);
-                    return;
-                }
-                else if (type == typeof(int))
-                {
-                    WriteInt32(ctx, (int)value);
-                    return;
-                }
-                else if (type == typeof(uint))
-                {
-                    WriteUInt32(ctx, (uint)value);
-                    return;
-                }
-                else if (type == typeof(long))
-                {
-                    WriteInt64(ctx, (long)value);
-                    return;
-                }
-                else if (type == typeof(ulong))
-                {
-                    WriteUInt64(ctx, (ulong)value);
-                    return;
-                }
-                else if (type == typeof(double))
-                {
-                    WriteDouble(ctx, (double)value);
-                    return;
-                }
-                else if (type == typeof(float))
-                {
-                    WriteFloat(ctx, (float)value);
-                    return;
-                }
-                else if (type == typeof(decimal))
-                {
-                    WriteDecimal(ctx, (decimal)value);
-                    return;
+                    case TypeCode.Byte:
+                        WriteByte(ctx, (byte)value);
+                        return;
+                    case TypeCode.Char:
+                        WriteChar(ctx, (char)value);
+                        return;
+                    case TypeCode.Boolean:
+                        WriteBoolean(ctx, (bool)value);
+                        return;
+                    case TypeCode.String:
+                        WriteString(ctx, (string)value);
+                        return;
+                    case TypeCode.Int16:
+                        WriteInt16(ctx, (short)value);
+                        return;
+                    case TypeCode.UInt16:
+                        WriteUInt16(ctx, (ushort)value);
+                        return;
+                    case TypeCode.Int32:
+                        WriteInt32(ctx, (int)value);
+                        return;
+                    case TypeCode.UInt32:
+                        WriteUInt32(ctx, (uint)value);
+                        return;
+                    case TypeCode.Int64:
+                        WriteInt64(ctx, (long)value);
+                        return;
+                    case TypeCode.UInt64:
+                        WriteUInt64(ctx, (ulong)value);
+                        return;
+                    case TypeCode.Double:
+                        WriteDouble(ctx, (double)value);
+                        return;
+                    case TypeCode.Single:
+                        WriteFloat(ctx, (float)value);
+                        return;
+                    case TypeCode.Decimal:
+                        WriteDecimal(ctx, (decimal)value);
+                        return;
                 }
 
                 // Saveable type
-                else if (typeof(Saveable).IsAssignableFrom(type))
+                if (typeof(Saveable).IsAssignableFrom(type))
                 {
                     Write(ctx, (Saveable)value); 
                     return;
