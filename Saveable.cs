@@ -516,7 +516,7 @@ namespace SaveableDotNet
             {
                 if (type.GetArrayRank() != 1)
                 {
-                    throw new Exception("Array must be a simple one-dimensional array.");
+                    throw new NotSupportedException("Array must not have more than 1 dimensions.");
                 }
 
                 // Simple array type
@@ -1045,7 +1045,7 @@ namespace SaveableDotNet
             {
                 if (type.GetArrayRank() != 1)
                 {
-                    throw new Exception("Array must be a simple one-dimensional array.");
+                    throw new NotSupportedException("Array must not have more than 1 dimensions.");
                 }
 
                 // Simple array type
@@ -1122,6 +1122,7 @@ namespace SaveableDotNet
                 else if (typeof(Saveable).IsAssignableFrom(elementType))
                 {
                     Write(ctx, (Saveable[])value);
+                    return;
                 }
             }
             else
@@ -1198,7 +1199,8 @@ namespace SaveableDotNet
                 // Saveable type
                 else if (typeof(Saveable).IsAssignableFrom(type))
                 {
-                    Write(ctx, (Saveable)value);
+                    Write(ctx, (Saveable)value); 
+                    return;
                 }
             }
 
