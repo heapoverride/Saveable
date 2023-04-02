@@ -10,7 +10,6 @@ namespace SaveableDotNet
     /// </summary>
     public class Saveable
     {
-        #region Properties
         private long position;
         private long length;
 
@@ -23,9 +22,7 @@ namespace SaveableDotNet
         /// Gets the length of the <see cref="Saveable"/> that was read from or written to <see cref="Stream"/>
         /// </summary>
         public long Length { get { return length; } }
-        #endregion
 
-        #region Overridable protected virtual instance methods
         /// <summary>
         /// Read a <see cref="Saveable"/> from <see cref="ReadContext"/>
         /// </summary>
@@ -37,156 +34,8 @@ namespace SaveableDotNet
                 // Skip properties not marked Saveable
                 if (!Attribute.IsDefined(prop, typeof(SaveableAttribute))) continue;
 
-                if (prop.PropertyType.IsArray)
-                {
-                    if (prop.PropertyType.GetArrayRank() != 1)
-                    {
-                        throw new Exception("Array must be a simple one-dimensional array.");
-                    }
-                    // simple array type
-                    var elementType = prop.PropertyType.GetElementType();
-
-                    // arrays of primitive data types
-                    if (elementType == typeof(byte))
-                    {
-                        prop.SetValue(this, ReadByteArray(ctx));
-                    }
-                    else if (elementType == typeof(char))
-                    {
-                        prop.SetValue(this, ReadCharArray(ctx));
-                    }
-                    else if (elementType == typeof(string))
-                    {
-                        prop.SetValue(this, ReadStringArray(ctx));
-                    }
-                    else if (elementType == typeof(short))
-                    {
-                        prop.SetValue(this, ReadInt16Array(ctx));
-                    }
-                    else if (elementType == typeof(ushort))
-                    {
-                        prop.SetValue(this, ReadUInt16Array(ctx));
-                    }
-                    else if (elementType == typeof(int))
-                    {
-                        prop.SetValue(this, ReadInt32Array(ctx));
-                    }
-                    else if (elementType == typeof(uint))
-                    {
-                        prop.SetValue(this, ReadUInt32Array(ctx));
-                    }
-                    else if (elementType == typeof(long))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadInt64());
-                    }
-                    else if (elementType == typeof(ulong))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadUInt64());
-                    }
-                    else if (elementType == typeof(double))
-                    {
-                        prop.SetValue(this, ReadDoubleArray(ctx));
-                    }
-                    else if (elementType == typeof(float))
-                    {
-                        prop.SetValue(this, ReadFloatArray(ctx));
-                    }
-                    else if (elementType == typeof(decimal))
-                    {
-                        prop.SetValue(this, ReadDecimalArray(ctx));
-                    }
-
-                    // saveable type
-                    else if (typeof(Saveable).IsAssignableFrom(elementType))
-                    {
-                        var array = Array.CreateInstance(elementType, ctx.Reader.ReadInt32());
-
-                        for (int i = 0; i < array.Length; i++)
-                        {
-                            var saveableObject = Activator.CreateInstance(elementType);
-                            ((Saveable)saveableObject).Read(ctx);
-
-                            array.SetValue(saveableObject, i);
-                        }
-
-                        prop.SetValue(this, array);
-                    }
-
-                    // throw error if type is not supported
-                    else
-                    {
-                        throw new Exception($"Unsupported property type: {prop.PropertyType}");
-                    }
-                }
-                else
-                {
-                    // non-array type
-
-                    // primitive data types
-                    if (prop.PropertyType == typeof(byte))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadByte());
-                    }
-                    else if (prop.PropertyType == typeof(char))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadChar());
-                    }
-                    else if (prop.PropertyType == typeof(string))
-                    {
-                        prop.SetValue(this, ReadString(ctx));
-                    }
-                    else if (prop.PropertyType == typeof(short))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadInt16());
-                    }
-                    else if (prop.PropertyType == typeof(ushort))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadUInt16());
-                    }
-                    else if (prop.PropertyType == typeof(int))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadInt32());
-                    }
-                    else if (prop.PropertyType == typeof(uint))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadUInt32());
-                    }
-                    else if (prop.PropertyType == typeof(long))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadInt64());
-                    }
-                    else if (prop.PropertyType == typeof(ulong))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadUInt64());
-                    }
-                    else if (prop.PropertyType == typeof(double))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadDouble());
-                    }
-                    else if (prop.PropertyType == typeof(float))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadSingle());
-                    }
-                    else if (prop.PropertyType == typeof(decimal))
-                    {
-                        prop.SetValue(this, ctx.Reader.ReadDecimal());
-                    }
-
-                    // saveable type
-                    else if (typeof(Saveable).IsAssignableFrom(prop.PropertyType))
-                    {
-                        var saveableObject = Activator.CreateInstance(prop.PropertyType);
-                        ((Saveable)saveableObject).Read(ctx);
-
-                        prop.SetValue(this, saveableObject);
-                    }
-
-                    // throw error if type is not supported
-                    else
-                    {
-                        throw new Exception($"Unsupported property type: {prop.PropertyType}");
-                    }
-                }
+                // Read and set value
+                prop.SetValue(this, ReadValue(ctx, prop.PropertyType));
             }
         }
 
@@ -201,163 +50,17 @@ namespace SaveableDotNet
                 // Skip properties not marked Saveable
                 if (!Attribute.IsDefined(prop, typeof(SaveableAttribute))) continue;
 
-                object value = prop.GetValue(this);
-
-                if (value == null)
-                {
-                    throw new Exception("Property must have a value at this time.");
-                }
-
-                if (prop.PropertyType.IsArray)
-                {
-                    if (prop.PropertyType.GetArrayRank() != 1)
-                    {
-                        throw new Exception("Array must be a simple one-dimensional array.");
-                    }
-                    // simple array type
-                    var elementType = prop.PropertyType.GetElementType();
-
-                    // arrays of primitive data types
-                    if (elementType == typeof(byte))
-                    {
-                        WriteByteArray(ctx, (byte[])value);
-                    }
-                    else if (elementType == typeof(char))
-                    {
-                        WriteCharArray(ctx, (char[])value);
-                    }
-                    else if (elementType == typeof(string))
-                    {
-                        WriteStringArray(ctx, (string[])value);
-                    }
-                    else if (elementType == typeof(short))
-                    {
-                        WriteInt16Array(ctx, (short[])value);
-                    }
-                    else if (elementType == typeof(ushort))
-                    {
-                        WriteUInt16Array(ctx, (ushort[])value);
-                    }
-                    else if (elementType == typeof(int))
-                    {
-                        WriteInt32Array(ctx, (int[])value);
-                    }
-                    else if (elementType == typeof(uint))
-                    {
-                        WriteUInt32Array(ctx, (uint[])value);
-                    }
-                    else if (elementType == typeof(long))
-                    {
-                        WriteInt64Array(ctx, (long[])value);
-                    }
-                    else if (elementType == typeof(ulong))
-                    {
-                        WriteUInt64Array(ctx, (ulong[])value);
-                    }
-                    else if (elementType == typeof(double))
-                    {
-                        WriteDoubleArray(ctx, (double[])value);
-                    }
-                    else if (elementType == typeof(float))
-                    {
-                        WriteFloatArray(ctx, (float[])value);
-                    }
-                    else if (elementType == typeof(decimal))
-                    {
-                        WriteDecimalArray(ctx, (decimal[])value);
-                    }
-
-                    // saveable type
-                    else if (typeof(Saveable).IsAssignableFrom(elementType))
-                    {
-                        Write(ctx, (Saveable[])value);
-                    }
-
-                    // throw error if type is not supported
-                    else
-                    {
-                        throw new Exception($"Unsupported property type: {prop.PropertyType}");
-                    }
-                }
-                else
-                {
-                    // non-array type
-
-                    // primitive data types
-                    if (prop.PropertyType == typeof(byte))
-                    {
-                        ctx.Writer.Write((byte)value);
-                    }
-                    else if (prop.PropertyType == typeof(char))
-                    {
-                        ctx.Writer.Write((char)value);
-                    }
-                    else if (prop.PropertyType == typeof(string))
-                    {
-                        WriteString(ctx, (string)value);
-                    }
-                    else if (prop.PropertyType == typeof(short))
-                    {
-                        ctx.Writer.Write((short)value);
-                    }
-                    else if (prop.PropertyType == typeof(ushort))
-                    {
-                        ctx.Writer.Write((ushort)value);
-                    }
-                    else if (prop.PropertyType == typeof(int))
-                    {
-                        ctx.Writer.Write((int)value);
-                    }
-                    else if (prop.PropertyType == typeof(uint))
-                    {
-                        ctx.Writer.Write((uint)value);
-                    }
-                    else if (prop.PropertyType == typeof(long))
-                    {
-                        ctx.Writer.Write((long)value);
-                    }
-                    else if (prop.PropertyType == typeof(ulong))
-                    {
-                        ctx.Writer.Write((ulong)value);
-                    }
-                    else if (prop.PropertyType == typeof(double))
-                    {
-                        ctx.Writer.Write((double)value);
-                    }
-                    else if (prop.PropertyType == typeof(float))
-                    {
-                        ctx.Writer.Write((float)value);
-                    }
-                    else if (prop.PropertyType == typeof(decimal))
-                    {
-                        ctx.Writer.Write((decimal)value);
-                    }
-
-                    // saveable type
-                    else if (typeof(Saveable).IsAssignableFrom(prop.PropertyType))
-                    {
-                        Write(ctx, (Saveable)value);
-                    }
-
-                    // throw error if type is not supported
-                    else
-                    {
-                        throw new Exception($"Unsupported property type: {prop.PropertyType}");
-                    }
-                }
+                // Get and write value
+                WriteValue(ctx, prop.GetValue(this));
             }
         }
-        #endregion
 
-        #region Public instance methods
         /// <summary>
         /// Dump a <see cref="Saveable"/> to byte array
         /// </summary>
         /// <returns></returns>
         public byte[] GetBytes() => GetBytes(this);
-        #endregion
 
-        #region Static read methods
         /// <summary>
         /// Read a <see cref="Saveable"/> from <see cref="Stream"/>
         /// </summary>
@@ -595,6 +298,23 @@ namespace SaveableDotNet
         }
 
         /// <summary>
+        /// Read a length-prefixed boolean array from <see cref="ReadContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static bool[] ReadBooleanArray(ReadContext ctx)
+        {
+            var array = new bool[ctx.Reader.ReadInt32()];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = ctx.Reader.ReadBoolean();
+            }
+
+            return array;
+        }
+
+        /// <summary>
         /// Read a length-prefixed string from <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
@@ -770,9 +490,179 @@ namespace SaveableDotNet
 
             return array;
         }
-        #endregion
 
-        #region Static write methods
+        /// <summary>
+        /// Read a value from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static T ReadValue<T>(ReadContext ctx)
+        {
+            return (T)ReadValue(ctx, typeof(T));
+        }
+
+        /// <summary>
+        /// Read a value from <see cref="ReadContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        public static object ReadValue(ReadContext ctx, Type type)
+        {
+            if (type.IsArray)
+            {
+                if (type.GetArrayRank() != 1)
+                {
+                    throw new Exception("Array must be a simple one-dimensional array.");
+                }
+
+                // Simple array type
+                var elementType = type.GetElementType();
+
+                // Arrays of primitive data types
+                if (elementType == typeof(byte))
+                {
+                    return ReadByteArray(ctx);
+                }
+                else if (elementType == typeof(char))
+                {
+                    return ReadCharArray(ctx);
+                }
+                else if (elementType == typeof(bool))
+                {
+                    return ReadBooleanArray(ctx);
+                }
+                else if (elementType == typeof(string))
+                {
+                    return ReadStringArray(ctx);
+                }
+                else if (elementType == typeof(short))
+                {
+                    return ReadInt16Array(ctx);
+                }
+                else if (elementType == typeof(ushort))
+                {
+                    return ReadUInt16Array(ctx);
+                }
+                else if (elementType == typeof(int))
+                {
+                    return ReadInt32Array(ctx);
+                }
+                else if (elementType == typeof(uint))
+                {
+                    return ReadUInt32Array(ctx);
+                }
+                else if (elementType == typeof(long))
+                {
+                    return ReadInt64Array(ctx);
+                }
+                else if (elementType == typeof(ulong))
+                {
+                    return ReadUInt64Array(ctx);
+                }
+                else if (elementType == typeof(double))
+                {
+                    return ReadDoubleArray(ctx);
+                }
+                else if (elementType == typeof(float))
+                {
+                    return ReadFloatArray(ctx);
+                }
+                else if (elementType == typeof(decimal))
+                {
+                    return ReadDecimalArray(ctx);
+                }
+
+                // Saveable type
+                else if (typeof(Saveable).IsAssignableFrom(elementType))
+                {
+                    var array = Array.CreateInstance(elementType, ctx.Reader.ReadInt32());
+
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        var saveableObject = Activator.CreateInstance(elementType);
+                        ((Saveable)saveableObject).Read(ctx);
+
+                        array.SetValue(saveableObject, i);
+                    }
+
+                    return array;
+                }
+            }
+            else
+            {
+                // Non-array type
+
+                // Primitive data types
+                if (type == typeof(byte))
+                {
+                    return ReadByte(ctx);
+                }
+                else if (type == typeof(char))
+                {
+                    return ReadChar(ctx);
+                }
+                else if (type == typeof(bool))
+                {
+                    return ReadBoolean(ctx);
+                }
+                else if (type == typeof(string))
+                {
+                    return ReadString(ctx);
+                }
+                else if (type == typeof(short))
+                {
+                    return ReadInt16(ctx);
+                }
+                else if (type == typeof(ushort))
+                {
+                    return ReadUInt16(ctx);
+                }
+                else if (type == typeof(int))
+                {
+                    return ReadInt32(ctx);
+                }
+                else if (type == typeof(uint))
+                {
+                    return ReadUInt32(ctx);
+                }
+                else if (type == typeof(long))
+                {
+                    return ReadInt64(ctx);
+                }
+                else if (type == typeof(ulong))
+                {
+                    return ReadUInt64(ctx);
+                }
+                else if (type == typeof(double))
+                {
+                    return ReadDouble(ctx);
+                }
+                else if (type == typeof(float))
+                {
+                    return ReadFloat(ctx);
+                }
+                else if (type == typeof(decimal))
+                {
+                    return ReadDecimal(ctx);
+                }
+
+                // Saveable type
+                else if (typeof(Saveable).IsAssignableFrom(type))
+                {
+                    var saveableObject = Activator.CreateInstance(type);
+                    ((Saveable)saveableObject).Read(ctx);
+
+                    return saveableObject;
+                }
+            }
+
+            throw new NotSupportedException($"Type {type} is not supported.");
+        }
+
         /// <summary>
         /// Write a <see cref="Saveable"/> to <see cref="Stream"/>
         /// </summary>
@@ -1140,9 +1030,181 @@ namespace SaveableDotNet
                 ctx.Writer.Write(value);
             }
         }
-        #endregion
 
-        #region Subclasses
+        /// <summary>
+        /// Write a value to <see cref="WriteContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="value"></param>
+        /// <exception cref="NotSupportedException"></exception>
+        public static void WriteValue(WriteContext ctx, object value)
+        {
+            var type = value.GetType();
+
+            if (type.IsArray)
+            {
+                if (type.GetArrayRank() != 1)
+                {
+                    throw new Exception("Array must be a simple one-dimensional array.");
+                }
+
+                // Simple array type
+                var elementType = type.GetElementType();
+
+                // Arrays of primitive data types
+                if (elementType == typeof(byte))
+                {
+                    WriteByteArray(ctx, (byte[])value);
+                    return;
+                }
+                else if (elementType == typeof(char))
+                {
+                    WriteCharArray(ctx, (char[])value);
+                    return;
+                }
+                else if (elementType == typeof(bool))
+                {
+                    WriteBooleanArray(ctx, (bool[])value);
+                    return;
+                }
+                else if (elementType == typeof(string))
+                {
+                    WriteStringArray(ctx, (string[])value);
+                    return;
+                }
+                else if (elementType == typeof(short))
+                {
+                    WriteInt16Array(ctx, (short[])value);
+                    return;
+                }
+                else if (elementType == typeof(ushort))
+                {
+                    WriteUInt16Array(ctx, (ushort[])value);
+                    return;
+                }
+                else if (elementType == typeof(int))
+                {
+                    WriteInt32Array(ctx, (int[])value);
+                    return;
+                }
+                else if (elementType == typeof(uint))
+                {
+                    WriteUInt32Array(ctx, (uint[])value);
+                    return;
+                }
+                else if (elementType == typeof(long))
+                {
+                    WriteInt64Array(ctx, (long[])value);
+                    return;
+                }
+                else if (elementType == typeof(ulong))
+                {
+                    WriteUInt64Array(ctx, (ulong[])value);
+                    return;
+                }
+                else if (elementType == typeof(double))
+                {
+                    WriteDoubleArray(ctx, (double[])value);
+                    return;
+                }
+                else if (elementType == typeof(float))
+                {
+                    WriteFloatArray(ctx, (float[])value);
+                    return;
+                }
+                else if (elementType == typeof(decimal))
+                {
+                    WriteDecimalArray(ctx, (decimal[])value);
+                    return;
+                }
+
+                // Saveable type
+                else if (typeof(Saveable).IsAssignableFrom(elementType))
+                {
+                    Write(ctx, (Saveable[])value);
+                }
+            }
+            else
+            {
+                // Non-array type
+
+                // Primitive data types
+                if (type == typeof(byte))
+                {
+                    WriteByte(ctx, (byte)value);
+                    return;
+                }
+                else if (type == typeof(char))
+                {
+                    WriteChar(ctx, (char)value);
+                    return;
+                }
+                else if (type == typeof(bool))
+                {
+                    WriteBoolean(ctx, (bool)value);
+                    return;
+                }
+                else if (type == typeof(string))
+                {
+                    WriteString(ctx, (string)value);
+                    return;
+                }
+                else if (type == typeof(short))
+                {
+                    WriteInt16(ctx, (short)value);
+                    return;
+                }
+                else if (type == typeof(ushort))
+                {
+                    WriteUInt16(ctx, (ushort)value);
+                    return;
+                }
+                else if (type == typeof(int))
+                {
+                    WriteInt32(ctx, (int)value);
+                    return;
+                }
+                else if (type == typeof(uint))
+                {
+                    WriteUInt32(ctx, (uint)value);
+                    return;
+                }
+                else if (type == typeof(long))
+                {
+                    WriteInt64(ctx, (long)value);
+                    return;
+                }
+                else if (type == typeof(ulong))
+                {
+                    WriteUInt64(ctx, (ulong)value);
+                    return;
+                }
+                else if (type == typeof(double))
+                {
+                    WriteDouble(ctx, (double)value);
+                    return;
+                }
+                else if (type == typeof(float))
+                {
+                    WriteFloat(ctx, (float)value);
+                    return;
+                }
+                else if (type == typeof(decimal))
+                {
+                    WriteDecimal(ctx, (decimal)value);
+                    return;
+                }
+
+                // Saveable type
+                else if (typeof(Saveable).IsAssignableFrom(type))
+                {
+                    Write(ctx, (Saveable)value);
+                }
+            }
+
+            throw new NotSupportedException($"Type {type} is not supported.");
+        }
+
         /// <summary>
         /// Context base class
         /// </summary>
@@ -1235,6 +1297,5 @@ namespace SaveableDotNet
                 Writer?.Dispose();
             }
         }
-        #endregion
     }
 }
