@@ -497,10 +497,7 @@ namespace SaveableDotNet
         /// <typeparam name="T"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static T ReadValue<T>(ReadContext ctx)
-        {
-            return (T)ReadValue(ctx, typeof(T));
-        }
+        public static T ReadValue<T>(ReadContext ctx) => (T)ReadValue(ctx, typeof(T));
 
         /// <summary>
         /// Read a value from <see cref="ReadContext"/>
