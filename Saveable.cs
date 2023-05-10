@@ -87,13 +87,15 @@ namespace SaveableDotNet
             var saveable = Activator.CreateInstance<T>();
 
             // Update position
-            saveable.position = ctx.Stream.Position;
+            if (ctx.Stream.CanSeek)
+                saveable.position = ctx.Stream.Position;
 
             // Read saveable
             saveable.Read(ctx);
 
             // Update length
-            saveable.length = ctx.Stream.Position - saveable.position;
+            if (ctx.Stream.CanSeek)
+                saveable.length = ctx.Stream.Position - saveable.position;
 
             return saveable;
         }
@@ -636,13 +638,15 @@ namespace SaveableDotNet
         public static void Write(WriteContext ctx, Saveable saveable)
         {
             // Update position
-            saveable.position = ctx.Stream.Position;
+            if (ctx.Stream.CanSeek)
+                saveable.position = ctx.Stream.Position;
 
             // Write saveable
             saveable.Write(ctx);
 
             // Update length
-            saveable.length = ctx.Stream.Position - saveable.position;
+            if (ctx.Stream.CanSeek)
+                saveable.length = ctx.Stream.Position - saveable.position;
         }
 
         /// <summary>
