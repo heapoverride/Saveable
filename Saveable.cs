@@ -1126,6 +1126,8 @@ namespace SaveableDotNet
             /// </summary>
             public Stream Stream { get; }
 
+            protected readonly bool leaveOpen;
+
             /// <summary>
             /// Initializes a new <see cref="Context"/> that acts as a wrapper for <see cref="System.IO.Stream"/>
             /// </summary>
@@ -1135,10 +1137,28 @@ namespace SaveableDotNet
                 Stream = stream;
             }
 
+            /// <summary>
+            /// Initializes a new <see cref="Context"/> that acts as a wrapper for <see cref="System.IO.Stream"/>
+            /// </summary>
+            /// <param name="stream"></param>
+            /// <param name="leaveOpen"></param>
+            public Context(Stream stream, bool leaveOpen) : this(stream)
+            {
+                this.leaveOpen = leaveOpen;
+            }
+
             public void Dispose()
             {
-                Stream?.Dispose();
+                if (!leaveOpen)
+                {
+                    Stream.Dispose();
+                }
             }
+
+            /// <summary>
+            /// Close a <see cref="System.IO.Stream"/> associated with this <see cref="Context"/>
+            /// </summary>
+            public void Close() => Stream.Close();
         }
 
         /// <summary>
@@ -1163,16 +1183,25 @@ namespace SaveableDotNet
             /// <summary>
             /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
             /// </summary>
+            /// <param name="stream"></param>
+            /// <param name="leaveOpen"></param>
+            public ReadContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen) { }
+
+            /// <summary>
+            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
+            /// </summary>
             /// <param name="reader"></param>
             public ReadContext(BinaryReader reader) : base(reader.BaseStream)
             {
                 Reader = reader;
             }
 
-            new public void Dispose()
-            {
-                Reader?.Dispose();
-            }
+            /// <summary>
+            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
+            /// </summary>
+            /// <param name="reader"></param>
+            /// <param name="leaveOpen"></param>
+            public ReadContext(BinaryReader reader, bool leaveOpen) : this(reader.BaseStream, leaveOpen) { }
         }
 
         /// <summary>
@@ -1197,16 +1226,25 @@ namespace SaveableDotNet
             /// <summary>
             /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
             /// </summary>
+            /// <param name="stream"></param>
+            /// <param name="leaveOpen"></param>
+            public WriteContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen) { }
+
+            /// <summary>
+            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
+            /// </summary>
             /// <param name="writer"></param>
             public WriteContext(BinaryWriter writer) : base(writer.BaseStream)
             {
                 Writer = writer;
             }
 
-            new public void Dispose()
-            {
-                Writer?.Dispose();
-            }
+            /// <summary>
+            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
+            /// </summary>
+            /// <param name="writer"></param>
+            /// <param name="leaveOpen"></param>
+            public WriteContext(BinaryWriter writer, bool leaveOpen) : this(writer.BaseStream, leaveOpen) { }
         }
     }
 }
