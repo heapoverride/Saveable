@@ -6,9 +6,9 @@ using System.Text;
 namespace SaveableDotNet
 {
     /// <summary>
-    /// Provides the base class for <see cref="Saveable"/> objects
+    /// Represents the base class for <see cref="Saveable"/> objects
     /// </summary>
-    public class Saveable
+    public abstract class Saveable
     {
         private long position;
         private long length;
