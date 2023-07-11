@@ -12,6 +12,6 @@ namespace SaveableDotNet
         /// Saveable position in stream
         /// </summary>
         /// <value></value>
-        public int Position { get; set; } = -1;
+        public long Position { get; set; } = -1;
     }
 }
