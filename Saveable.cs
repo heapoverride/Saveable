@@ -70,10 +70,11 @@ namespace SaveableDotNet
         public static T Read<T>(Stream stream) where T : Saveable
         {
             // Create read context
-            var ctx = new ReadContext(stream);
-
-            // Read saveable
-            return Read<T>(ctx);
+            using (var ctx = new ReadContext(stream))
+            {
+                // Read saveable
+                return Read<T>(ctx);
+            }
         }
 
         /// <summary>
@@ -123,10 +124,11 @@ namespace SaveableDotNet
         public static T[] ReadArray<T>(Stream stream) where T : Saveable
         {
             // Create read context
-            var ctx = new ReadContext(stream);
-
-            // Read saveables
-            return ReadArray<T>(ctx);
+            using (var ctx = new ReadContext(stream))
+            {
+                // Read saveables
+                return ReadArray<T>(ctx);
+            }
         }
 
         /// <summary>
@@ -624,10 +626,11 @@ namespace SaveableDotNet
         public static void Write(Stream stream, Saveable saveable)
         {
             // Create write context
-            var ctx = new WriteContext(stream);
-
-            // Write saveable
-            Write(ctx, saveable);
+            using (var ctx = new WriteContext(stream))
+            {
+                // Write saveable
+                Write(ctx, saveable);
+            }
         }
 
         /// <summary>
@@ -657,10 +660,11 @@ namespace SaveableDotNet
         public static void Write(Stream stream, Saveable[] array)
         {
             // Create write context
-            var ctx = new WriteContext(stream);
-
-            // Write saveables
-            Write(ctx, array);
+            using (var ctx = new WriteContext(stream))
+            {
+                // Write saveables
+                Write(ctx, array);
+            }
         }
 
         /// <summary>
