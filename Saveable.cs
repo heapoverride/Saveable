@@ -37,12 +37,6 @@ namespace SaveableDotNet
                 // Skip properties not marked Saveable
                 if (attribute == null) continue;
 
-                // Set stream position
-                if (attribute.Position > -1) 
-                {
-                    ctx.Stream.Position = attribute.Position;
-                }
-
                 // Read and set value
                 prop.SetValue(this, ReadValue(ctx, prop.PropertyType));
             }
@@ -62,12 +56,6 @@ namespace SaveableDotNet
                 // Skip properties not marked Saveable
                 if (attribute == null) continue;
 
-                // Set stream position
-                if (attribute.Position > -1) 
-                {
-                    ctx.Stream.Position = attribute.Position;
-                }
-
                 // Get and write value
                 WriteValue(ctx, prop.GetValue(this));
             }
@@ -82,13 +70,13 @@ namespace SaveableDotNet
         /// <summary>
         /// Read a <see cref="Saveable"/> from <see cref="Stream"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="stream"></param>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static T Read<T>(Stream stream) where T : Saveable
         {
             // Create read context
-            using (var ctx = new ReadContext(stream))
+            using (var ctx = new ReadContext(stream, true))
             {
                 // Read saveable
                 return Read<T>(ctx);
@@ -136,13 +124,13 @@ namespace SaveableDotNet
         /// <summary>
         /// Read an array of <see cref="Saveable"/> from <see cref="Stream"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="stream"></param>
+        /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static T[] ReadArray<T>(Stream stream) where T : Saveable
         {
             // Create read context
-            using (var ctx = new ReadContext(stream))
+            using (var ctx = new ReadContext(stream, true))
             {
                 // Read saveables
                 return ReadArray<T>(ctx);
@@ -644,7 +632,7 @@ namespace SaveableDotNet
         public static void Write(Stream stream, Saveable saveable)
         {
             // Create write context
-            using (var ctx = new WriteContext(stream))
+            using (var ctx = new WriteContext(stream, true))
             {
                 // Write saveable
                 Write(ctx, saveable);
@@ -678,7 +666,7 @@ namespace SaveableDotNet
         public static void Write(Stream stream, Saveable[] array)
         {
             // Create write context
-            using (var ctx = new WriteContext(stream))
+            using (var ctx = new WriteContext(stream, true))
             {
                 // Write saveables
                 Write(ctx, array);
@@ -1197,7 +1185,14 @@ namespace SaveableDotNet
             /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
             /// </summary>
             /// <param name="stream"></param>
-            public ReadContext(Stream stream) : base(stream)
+            public ReadContext(Stream stream) : this(stream, false) { }
+
+            /// <summary>
+            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
+            /// </summary>
+            /// <param name="stream"></param>
+            /// <param name="leaveOpen"></param>
+            public ReadContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen)
             {
                 Reader = new BinaryReader(stream);
             }
@@ -1205,18 +1200,8 @@ namespace SaveableDotNet
             /// <summary>
             /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
             /// </summary>
-            /// <param name="stream"></param>
-            /// <param name="leaveOpen"></param>
-            public ReadContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen) { }
-
-            /// <summary>
-            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
-            /// </summary>
             /// <param name="reader"></param>
-            public ReadContext(BinaryReader reader) : base(reader.BaseStream)
-            {
-                Reader = reader;
-            }
+            public ReadContext(BinaryReader reader) : this(reader, false) { }
 
             /// <summary>
             /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
@@ -1240,26 +1225,22 @@ namespace SaveableDotNet
             /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
             /// </summary>
             /// <param name="stream"></param>
-            public WriteContext(Stream stream) : base(stream)
-            {
-                Writer = new BinaryWriter(stream);
-            }
+            public WriteContext(Stream stream) : this(stream, false) { }
 
             /// <summary>
             /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
             /// </summary>
             /// <param name="stream"></param>
             /// <param name="leaveOpen"></param>
-            public WriteContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen) { }
+            public WriteContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen) {
+                Writer = new BinaryWriter(stream);
+            }
 
             /// <summary>
             /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
             /// </summary>
             /// <param name="writer"></param>
-            public WriteContext(BinaryWriter writer) : base(writer.BaseStream)
-            {
-                Writer = writer;
-            }
+            public WriteContext(BinaryWriter writer) : this(writer, false) { }
 
             /// <summary>
             /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
