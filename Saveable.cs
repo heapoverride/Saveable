@@ -31,11 +31,8 @@ namespace SaveableDotNet
         {
             foreach (var prop in GetType().GetProperties())
             {
-                // Try get saveable attribute
-                var attribute = (SaveableAttribute)Attribute.GetCustomAttribute(prop, typeof(SaveableAttribute));
-
-                // Skip properties not marked Saveable
-                if (attribute == null) continue;
+                // Skip properties with no Saveable attribute
+                if (!Attribute.IsDefined(prop, typeof(SaveableAttribute))) continue;
 
                 // Read and set value
                 prop.SetValue(this, ReadValue(ctx, prop.PropertyType));
@@ -50,11 +47,8 @@ namespace SaveableDotNet
         {
             foreach (var prop in GetType().GetProperties())
             {
-                // Try get saveable attribute
-                var attribute = (SaveableAttribute)Attribute.GetCustomAttribute(prop, typeof(SaveableAttribute));
-
-                // Skip properties not marked Saveable
-                if (attribute == null) continue;
+                // Skip properties with no Saveable attribute
+                if (!Attribute.IsDefined(prop, typeof(SaveableAttribute))) continue;
 
                 // Get and write value
                 WriteValue(ctx, prop.GetValue(this));
