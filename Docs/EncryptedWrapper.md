@@ -3,7 +3,7 @@
 This wrapper can be used to read and write encrypted `Saveable` objects. 
 
 > **Warning**
-> Change `Key` and `IV` before using.
+> Change `key` and `iv` before using.
 
 ```cs
 using System;
