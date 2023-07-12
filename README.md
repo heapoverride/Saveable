@@ -16,3 +16,4 @@ Easy to use class library for reading/writing objects from/to binary streams.
 #### Other stuff
 - [Supported types](Docs/TypeSupport.md)
 - [Saveable attribute Offset property](Docs/SaveableAttributeOffset.md)
+- [Encrypted wrapper](Docs/EncryptedWrapper.md)
