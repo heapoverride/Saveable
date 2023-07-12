@@ -4,7 +4,7 @@ Supported types are all primitive data types, Saveable and 1d arrays of those.
 
 ## Custom type support
 
-Example Read and Write methods to handle a `Dictionary<K, V>` that is not supported by default.
+Example methods to read and write `Dictionary<K, V>` that is not supported by default.
 
 ```cs
 static Dictionary<K, V> ReadDictionary<K, V>(Saveable.ReadContext ctx)
