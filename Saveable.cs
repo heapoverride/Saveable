@@ -38,7 +38,7 @@ namespace SaveableDotNet
                 if (attribute == null) continue;
 
                 // Add offset to current stream position if greater than zero
-                if (attribute.Offset > 0)
+                if (attribute.Offset > 0 && ctx.Stream.CanSeek)
                 {
                     ctx.Stream.Position += attribute.Offset;
                 }
@@ -63,7 +63,7 @@ namespace SaveableDotNet
                 if (attribute == null) continue;
 
                 // Add offset to current stream position if greater than zero
-                if (attribute.Offset > 0)
+                if (attribute.Offset > 0 && ctx.Stream.CanSeek)
                 {
                     ctx.Stream.Position += attribute.Offset;
                 }
