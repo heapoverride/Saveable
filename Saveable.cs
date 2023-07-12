@@ -31,8 +31,17 @@ namespace SaveableDotNet
         {
             foreach (var prop in GetType().GetProperties())
             {
+                // Try to get Saveable attribute
+                var attribute = (SaveableAttribute)Attribute.GetCustomAttribute(prop, typeof(SaveableAttribute));
+
                 // Skip properties with no Saveable attribute
-                if (!Attribute.IsDefined(prop, typeof(SaveableAttribute))) continue;
+                if (attribute == null) continue;
+
+                // Add offset to current stream position if greater than zero
+                if (attribute.Offset > 0)
+                {
+                    ctx.Stream.Position += attribute.Offset;
+                }
 
                 // Read and set value
                 prop.SetValue(this, ReadValue(ctx, prop.PropertyType));
@@ -47,8 +56,17 @@ namespace SaveableDotNet
         {
             foreach (var prop in GetType().GetProperties())
             {
+                // Try to get Saveable attribute
+                var attribute = (SaveableAttribute)Attribute.GetCustomAttribute(prop, typeof(SaveableAttribute));
+
                 // Skip properties with no Saveable attribute
-                if (!Attribute.IsDefined(prop, typeof(SaveableAttribute))) continue;
+                if (attribute == null) continue;
+
+                // Add offset to current stream position if greater than zero
+                if (attribute.Offset > 0)
+                {
+                    ctx.Stream.Position += attribute.Offset;
+                }
 
                 // Get and write value
                 WriteValue(ctx, prop.GetValue(this));
