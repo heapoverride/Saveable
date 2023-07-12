@@ -38,10 +38,7 @@ namespace SaveableDotNet
                 if (attribute == null) continue;
 
                 // Add offset to current stream position if greater than zero
-                if (attribute.Offset > 0 && ctx.Stream.CanSeek)
-                {
-                    ctx.Stream.Position += attribute.Offset;
-                }
+                AddOffset(ctx, attribute.Offset);
 
                 // Read and set value
                 prop.SetValue(this, ReadValue(ctx, prop.PropertyType));
@@ -63,10 +60,7 @@ namespace SaveableDotNet
                 if (attribute == null) continue;
 
                 // Add offset to current stream position if greater than zero
-                if (attribute.Offset > 0 && ctx.Stream.CanSeek)
-                {
-                    ctx.Stream.Position += attribute.Offset;
-                }
+                AddOffset(ctx, attribute.Offset);
 
                 // Get and write value
                 WriteValue(ctx, prop.GetValue(this));
@@ -78,6 +72,21 @@ namespace SaveableDotNet
         /// </summary>
         /// <returns></returns>
         public byte[] GetBytes() => GetBytes(this);
+
+        /// <summary>
+        /// Add an offset to the <see cref="Context"/>'s <see cref="Stream"/> position
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="offset"></param>
+        /// <remarks>
+        /// Offset must be greater than zero
+        /// </remarks>
+        public static void AddOffset(Context ctx, int offset) {
+            if (offset > 0 && ctx.Stream.CanSeek)
+            {
+                ctx.Stream.Position += offset;
+            }
+        }
 
         /// <summary>
         /// Read a <see cref="Saveable"/> from <see cref="Stream"/>
