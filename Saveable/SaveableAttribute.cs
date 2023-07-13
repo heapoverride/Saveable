@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Saveable.NET
+namespace SaveableNET
 {
     /// <summary>
     /// Saveable attribute

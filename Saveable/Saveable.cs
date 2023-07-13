@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Saveable.NET
+namespace SaveableNET
 {
     /// <summary>
     /// Represents the base class for <see cref="Saveable"/> objects

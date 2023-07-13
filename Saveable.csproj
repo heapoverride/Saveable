@@ -12,7 +12,7 @@
 		<TargetName>Saveable</TargetName>
 		<AssemblyVersion>2.2.0</AssemblyVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<RootNamespace>Saveable.NET</RootNamespace>
+		<RootNamespace>SaveableNET</RootNamespace>
 	</PropertyGroup>
 	
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
