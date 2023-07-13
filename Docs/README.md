@@ -1,16 +1,16 @@
 ## Documentation
 
 #### Reading and writing Saveable objects
-- [Defining a Saveable](Docs/Saveable.md)
-- [Reading a Saveable](Docs/SaveableRead.md)
-- [Writing a Saveable](Docs/SaveableWrite.md)
+- [Defining a Saveable](Pages/Saveable.md)
+- [Reading a Saveable](Pages/SaveableRead.md)
+- [Writing a Saveable](Pages/SaveableWrite.md)
 
 #### Using read and write contexts
-- [Using ReadContext](Docs/ReadContext.md)
-- [Using WriteContext](Docs/WriteContext.md)
+- [Using ReadContext](Pages/ReadContext.md)
+- [Using WriteContext](Pages/WriteContext.md)
 
 #### Other stuff
-- [Supported types](Docs/TypeSupport.md)
-- [Saveable attribute Offset property](Docs/SaveableAttributeOffset.md)
-- [Encrypted wrapper](Docs/EncryptedWrapper.md)
-- [Extensions](Docs/Extensions.md)
+- [Supported types](Pages/TypeSupport.md)
+- [Saveable attribute Offset property](Pages/SaveableAttributeOffset.md)
+- [Encrypted wrapper](Pages/EncryptedWrapper.md)
+- [Extensions](Pages/Extensions.md)
