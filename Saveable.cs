@@ -8,7 +8,7 @@ namespace SaveableDotNet
     /// <summary>
     /// Represents the base class for <see cref="Saveable"/> objects
     /// </summary>
-    public abstract class Saveable
+    public abstract partial class Saveable
     {
         private long position;
         private long length;
@@ -865,7 +865,7 @@ namespace SaveableDotNet
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteString(WriteContext ctx, string value) => WriteByteArray(ctx, Encoding.UTF8.GetBytes(value));
+        public static void WriteString(Saveable.WriteContext ctx, string value) => WriteByteArray(ctx, Encoding.UTF8.GetBytes(value));
 
         /// <summary>
         /// Write a length-prefixed array of length-prefixed strings to <see cref="WriteContext"/>
@@ -1145,130 +1145,6 @@ namespace SaveableDotNet
             }
 
             throw new NotSupportedException($"Type {type} is not supported.");
-        }
-
-        /// <summary>
-        /// Context base class
-        /// </summary>
-        public class Context : IDisposable
-        {
-            /// <summary>
-            /// Gets the base <see cref="System.IO.Stream"/> associated with this <see cref="Context"/>
-            /// </summary>
-            public Stream Stream { get; }
-
-            protected readonly bool leaveOpen;
-
-            /// <summary>
-            /// Initializes a new <see cref="Context"/> that acts as a wrapper for <see cref="System.IO.Stream"/>
-            /// </summary>
-            /// <param name="stream"></param>
-            public Context(Stream stream)
-            {
-                Stream = stream;
-            }
-
-            /// <summary>
-            /// Initializes a new <see cref="Context"/> that acts as a wrapper for <see cref="System.IO.Stream"/>
-            /// </summary>
-            /// <param name="stream"></param>
-            /// <param name="leaveOpen"></param>
-            public Context(Stream stream, bool leaveOpen) : this(stream)
-            {
-                this.leaveOpen = leaveOpen;
-            }
-
-            public void Dispose()
-            {
-                if (!leaveOpen)
-                {
-                    Stream.Dispose();
-                }
-            }
-
-            /// <summary>
-            /// Close a <see cref="System.IO.Stream"/> associated with this <see cref="Context"/>
-            /// </summary>
-            public void Close() => Stream.Close();
-        }
-
-        /// <summary>
-        /// Read context
-        /// </summary>
-        public class ReadContext : Context, IDisposable
-        {
-            /// <summary>
-            /// Gets the <see cref="BinaryReader"/> associated with this <see cref="ReadContext"/>
-            /// </summary>
-            public BinaryReader Reader { get; }
-
-            /// <summary>
-            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
-            /// </summary>
-            /// <param name="stream"></param>
-            public ReadContext(Stream stream) : this(stream, false) { }
-
-            /// <summary>
-            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
-            /// </summary>
-            /// <param name="stream"></param>
-            /// <param name="leaveOpen"></param>
-            public ReadContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen)
-            {
-                Reader = new BinaryReader(stream);
-            }
-
-            /// <summary>
-            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
-            /// </summary>
-            /// <param name="reader"></param>
-            public ReadContext(BinaryReader reader) : this(reader, false) { }
-
-            /// <summary>
-            /// Initializes a new <see cref="ReadContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryReader"/>
-            /// </summary>
-            /// <param name="reader"></param>
-            /// <param name="leaveOpen"></param>
-            public ReadContext(BinaryReader reader, bool leaveOpen) : this(reader.BaseStream, leaveOpen) { }
-        }
-
-        /// <summary>
-        /// Write context
-        /// </summary>
-        public class WriteContext : Context, IDisposable
-        {
-            /// <summary>
-            /// Gets the <see cref="BinaryWriter"/> associated with this <see cref="WriteContext"/>
-            /// </summary>
-            public BinaryWriter Writer { get; }
-
-            /// <summary>
-            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
-            /// </summary>
-            /// <param name="stream"></param>
-            public WriteContext(Stream stream) : this(stream, false) { }
-
-            /// <summary>
-            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
-            /// </summary>
-            /// <param name="stream"></param>
-            /// <param name="leaveOpen"></param>
-            public WriteContext(Stream stream, bool leaveOpen) : base(stream, leaveOpen) {
-                Writer = new BinaryWriter(stream);
-            }
-
-            /// <summary>
-            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
-            /// </summary>
-            /// <param name="writer"></param>
-            public WriteContext(BinaryWriter writer) : this(writer, false) { }
-
-            /// <summary>
-            /// Initializes a new <see cref="WriteContext"/> that acts as a wrapper for <see cref="Stream"/> and <see cref="BinaryWriter"/>
-            /// </summary>
-            /// <param name="writer"></param>
-            /// <param name="leaveOpen"></param>
-            public WriteContext(BinaryWriter writer, bool leaveOpen) : this(writer.BaseStream, leaveOpen) { }
         }
     }
 }
