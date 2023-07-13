@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace SaveableDotNet
+namespace Saveable.NET
 {
     public abstract partial class Saveable
     {
