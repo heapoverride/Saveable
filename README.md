@@ -5,16 +5,16 @@ Easy to use class library for reading/writing objects from/to binary streams.
 ## Documentation
 
 #### Reading and writing Saveable objects
-- [Defining a Saveable](Docs/Saveable.md)
-- [Reading a Saveable](Docs/SaveableRead.md)
-- [Writing a Saveable](Docs/SaveableWrite.md)
+- [Defining a Saveable](docs/Saveable.md)
+- [Reading a Saveable](docs/SaveableRead.md)
+- [Writing a Saveable](docs/SaveableWrite.md)
 
 #### Using read and write contexts
-- [Using ReadContext](Docs/ReadContext.md)
-- [Using WriteContext](Docs/WriteContext.md)
+- [Using ReadContext](docs/ReadContext.md)
+- [Using WriteContext](docs/WriteContext.md)
 
 #### Other stuff
-- [Supported types](Docs/TypeSupport.md)
-- [Saveable attribute Offset property](Docs/SaveableAttributeOffset.md)
-- [Encrypted wrapper](Docs/EncryptedWrapper.md)
-- [Extensions](Docs/Extensions.md)
+- [Supported types](docs/TypeSupport.md)
+- [Saveable attribute Offset property](docs/SaveableAttributeOffset.md)
+- [Encrypted wrapper](docs/EncryptedWrapper.md)
+- [Extensions](docs/Extensions.md)

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net472</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<OutputType>Library</OutputType>
+		<Platforms>AnyCPU;x86;x64;ARM32</Platforms>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>bin\$(Configuration)\$(TargetFramework)\</OutputPath>
+		<TargetName>Saveable.$(Platform)</TargetName>
+		<AssemblyName>Saveable</AssemblyName>
+		<AssemblyVersion>2.2.0</AssemblyVersion>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<DebugSymbols>false</DebugSymbols>
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
+		<TargetName>Saveable</TargetName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="docs\**" />
+		<EmbeddedResource Remove="docs\**" />
+		<None Remove="docs\**" />
+		<None Remove="README.md" />
+	</ItemGroup>
+
+</Project>
