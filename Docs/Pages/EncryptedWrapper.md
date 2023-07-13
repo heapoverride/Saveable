@@ -8,7 +8,7 @@ This wrapper can be used to read and write encrypted `Saveable` objects.
 ```cs
 using System;
 using System.Security.Cryptography;
-using Saveable.NET;
+using SaveableNET;
 
 /// <summary>
 /// Represents an encrypted wrapper for <see cref="Saveable"/> object

@@ -11,7 +11,7 @@ In this example we're adding two new methods to handle reading and writing a `Di
 using System;
 using System.Collections.Generic;
 
-namespace Saveable.NET
+namespace SaveableNET
 {
     public abstract partial class Saveable
     {

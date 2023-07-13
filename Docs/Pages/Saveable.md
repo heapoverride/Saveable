@@ -3,6 +3,8 @@
 A simple `Person` class that inherits from `Saveable`. Properties are marked with `Saveable` attribute and will be automatically handled.
 
 ```cs
+using SaveableNET;
+
 class Person : Saveable 
 {
     [Saveable]
@@ -18,6 +20,8 @@ class Person : Saveable
 Sometimes you need to handle an unsupported type so using `Saveable` attribute atleast for that type is not an option. This example shows how you can manually handle your properties. This is by default faster if you need the extra performance since there is no type checking.
 
 ```cs
+using SaveableNET;
+
 class Person : Saveable 
 {
     public string Name;
