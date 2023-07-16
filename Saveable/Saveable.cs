@@ -92,27 +92,27 @@ namespace SaveableNET
         /// Read a <see cref="Saveable"/> from <see cref="Stream"/>
         /// </summary>
         /// <param name="stream"></param>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <returns></returns>
-        public static T Read<T>(Stream stream) where T : Saveable
+        public static TSaveable Read<TSaveable>(Stream stream) where TSaveable : Saveable
         {
             // Create read context
             using (var ctx = new ReadContext(stream, true))
             {
                 // Read saveable
-                return Read<T>(ctx);
+                return Read<TSaveable>(ctx);
             }
         }
 
         /// <summary>
         /// Read a <see cref="Saveable"/> from <see cref="ReadContext"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static T Read<T>(ReadContext ctx) where T : Saveable
+        public static TSaveable Read<TSaveable>(ReadContext ctx) where TSaveable : Saveable
         {
-            var saveable = Activator.CreateInstance<T>();
+            var saveable = Activator.CreateInstance<TSaveable>();
 
             // Update position
             if (ctx.Stream.CanSeek)
@@ -131,14 +131,14 @@ namespace SaveableNET
         /// <summary>
         /// Read a <see cref="Saveable"/> from byte array
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static T Read<T>(byte[] array) where T : Saveable
+        public static TSaveable Read<TSaveable>(byte[] array) where TSaveable : Saveable
         {
             using (var stream = new MemoryStream(array))
             {
-                return Read<T>(stream);
+                return Read<TSaveable>(stream);
             }
         }
 
@@ -146,31 +146,31 @@ namespace SaveableNET
         /// Read an array of <see cref="Saveable"/> from <see cref="Stream"/>
         /// </summary>
         /// <param name="stream"></param>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <returns></returns>
-        public static T[] ReadArray<T>(Stream stream) where T : Saveable
+        public static TSaveable[] ReadArray<TSaveable>(Stream stream) where TSaveable : Saveable
         {
             // Create read context
             using (var ctx = new ReadContext(stream, true))
             {
                 // Read saveables
-                return ReadArray<T>(ctx);
+                return ReadArray<TSaveable>(ctx);
             }
         }
 
         /// <summary>
         /// Read an array of <see cref="Saveable"/> from <see cref="ReadContext"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static T[] ReadArray<T>(ReadContext ctx) where T : Saveable
+        public static TSaveable[] ReadArray<TSaveable>(ReadContext ctx) where TSaveable : Saveable
         {
-            var array = new T[ctx.Reader.ReadInt32()];
+            var array = new TSaveable[ctx.Reader.ReadInt32()];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = Read<T>(ctx);
+                array[i] = Read<TSaveable>(ctx);
             }
 
             return array;
@@ -179,44 +179,44 @@ namespace SaveableNET
         /// <summary>
         /// Read an array of <see cref="Saveable"/> from byte array
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static T[] ReadArray<T>(byte[] array) where T : Saveable
+        public static TSaveable[] ReadArray<TSaveable>(byte[] array) where TSaveable : Saveable
         {
             using (var stream = new MemoryStream(array))
             {
-                return ReadArray<T>(stream);
+                return ReadArray<TSaveable>(stream);
             }
         }
 
         /// <summary>
         /// Get an enumerator from <see cref="Stream"/> that can be used to iterate over an array of <see cref="Saveable"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static IEnumerable<T> GetEnumerator<T>(Stream stream) where T : Saveable
+        public static IEnumerable<TSaveable> GetEnumerator<TSaveable>(Stream stream) where TSaveable : Saveable
         {
             // Create read context
             var ctx = new ReadContext(stream);
 
-            return GetEnumerator<T>(ctx);
+            return GetEnumerator<TSaveable>(ctx);
         }
 
         /// <summary>
         /// Get an enumerator from <see cref="ReadContext"/> that can be used to iterate over an array of <see cref="Saveable"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TSaveable"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static IEnumerable<T> GetEnumerator<T>(ReadContext ctx) where T : Saveable
+        public static IEnumerable<TSaveable> GetEnumerator<TSaveable>(ReadContext ctx) where TSaveable : Saveable
         {
             int length = ctx.Reader.ReadInt32();
 
             for (int i = 0; i < length; i++)
             {
-                yield return Read<T>(ctx);
+                yield return Read<TSaveable>(ctx);
             }
         }
 
@@ -525,10 +525,10 @@ namespace SaveableNET
         /// <summary>
         /// Read a value from <see cref="ReadContext"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static T ReadValue<T>(ReadContext ctx) => (T)ReadValue(ctx, typeof(T));
+        public static TValue ReadValue<TValue>(ReadContext ctx) => (TValue)ReadValue(ctx, typeof(TValue));
 
         /// <summary>
         /// Read a value from <see cref="ReadContext"/>
