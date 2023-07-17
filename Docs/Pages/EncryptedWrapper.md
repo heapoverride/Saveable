@@ -11,17 +11,17 @@ using System.Security.Cryptography;
 using SaveableNET;
 
 /// <summary>
-/// Represents an encrypted wrapper for <see cref="Saveable"/> object
+/// Represents an encrypted wrapper for <see cref="TSaveable"/> object
 /// </summary>
-/// <typeparam name="T"></typeparam>
-internal class Encrypted<T> : Saveable where T : Saveable
+/// <typeparam name="TSaveable"></typeparam>
+internal class Encrypted<TSaveable> : Saveable where TSaveable : Saveable
 {
-    private T value;
+    private TSaveable value;
 
     /// <summary>
     /// Wrapped <see cref="Saveable"/> object
     /// </summary>
-    public T Value { get { return value; } }
+    public TSaveable Value { get { return value; } }
 
     private static Aes aes;
 
@@ -51,7 +51,7 @@ internal class Encrypted<T> : Saveable where T : Saveable
     /// Instantiate new encrypted <see cref="Saveable"/> object
     /// </summary>
     /// <param name="value"></param>
-    public Encrypted(T value)
+    public Encrypted(TSaveable value)
     {
         this.value = value;
     }
@@ -62,7 +62,7 @@ internal class Encrypted<T> : Saveable where T : Saveable
         {
             using (var cryptoStream = new CryptoStream(ctx.Stream, decryptor, CryptoStreamMode.Read, true))
             {
-                value = Read<T>(cryptoStream);
+                value = Read<TSaveable>(cryptoStream);
             }
         }
     }
@@ -78,7 +78,7 @@ internal class Encrypted<T> : Saveable where T : Saveable
         }
     }
 
-    public static implicit operator Encrypted<T>(T value) => new Encrypted<T>(value);
-    public static implicit operator T(Encrypted<T> value) => value.Value;
+    public static implicit operator Encrypted<TSaveable>(TSaveable value) => new Encrypted<T>(value);
+    public static implicit operator TSaveable(Encrypted<TSaveable> value) => value.Value;
 }
 ```
