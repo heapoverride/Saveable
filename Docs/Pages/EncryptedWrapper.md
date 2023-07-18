@@ -6,7 +6,6 @@ This wrapper can be used to read and write encrypted `Saveable` objects.
 > Change `key` and `iv` before using.
 
 ```cs
-using System;
 using System.Security.Cryptography;
 using SaveableNET;
 
@@ -56,6 +55,11 @@ internal class Encrypted<TSaveable> : Saveable where TSaveable : Saveable
         this.value = value;
     }
 
+    /// <summary>
+    /// Instantiate new encrypted <see cref="Saveable"/> object
+    /// </summary>
+    public Encrypted() { }
+
     protected override void Read(ReadContext ctx)
     {
         using (var decryptor = aes.CreateDecryptor())
@@ -78,7 +82,7 @@ internal class Encrypted<TSaveable> : Saveable where TSaveable : Saveable
         }
     }
 
-    public static implicit operator Encrypted<TSaveable>(TSaveable value) => new Encrypted<T>(value);
+    public static implicit operator Encrypted<TSaveable>(TSaveable value) => new Encrypted<TSaveable>(value);
     public static implicit operator TSaveable(Encrypted<TSaveable> value) => value.Value;
 }
 ```
