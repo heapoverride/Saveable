@@ -239,7 +239,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static bool ReadBoolean(ReadContext ctx) => ctx.Reader.ReadBoolean();
+        public static bool ReadBool(ReadContext ctx) => ctx.Reader.ReadBoolean();
 
         /// <summary>
         /// Read a 16-bit signed integer from <see cref="ReadContext"/>
@@ -333,7 +333,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static bool[] ReadBooleanArray(ReadContext ctx)
+        public static bool[] ReadBoolArray(ReadContext ctx)
         {
             var array = new bool[ctx.Reader.ReadInt32()];
 
@@ -558,7 +558,7 @@ namespace SaveableNET
                     case TypeCode.Char:
                         return ReadCharArray(ctx);
                     case TypeCode.Boolean:
-                        return ReadBooleanArray(ctx);
+                        return ReadBoolArray(ctx);
                     case TypeCode.String:
                         return ReadStringArray(ctx);
                     case TypeCode.Int16:
@@ -609,7 +609,7 @@ namespace SaveableNET
                     case TypeCode.Char:
                         return ReadChar(ctx);
                     case TypeCode.Boolean:
-                        return ReadBoolean(ctx);
+                        return ReadBool(ctx);
                     case TypeCode.String:
                         return ReadString(ctx);
                     case TypeCode.Int16:
@@ -744,91 +744,91 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteByte(WriteContext ctx, byte value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, byte value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a char to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteChar(WriteContext ctx, char value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, char value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a boolean value to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteBoolean(WriteContext ctx, bool value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, bool value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a 16-bit signed integer to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteInt16(WriteContext ctx, short value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, short value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a 16-bit unsigned integer to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteUInt16(WriteContext ctx, ushort value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, ushort value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a 32-bit signed integer to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteInt32(WriteContext ctx, int value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, int value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a 32-bit unsigned integer to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteUInt32(WriteContext ctx, uint value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, uint value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a 64-bit signed integer to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteInt64(WriteContext ctx, long value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, long value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a 64-bit unsigned integer to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteUInt64(WriteContext ctx, ulong value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, ulong value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a double-precision floating-point value to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteDouble(WriteContext ctx, double value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, double value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a single-precision floating-point value to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteFloat(WriteContext ctx, float value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, float value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a decimal value to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteDecimal(WriteContext ctx, decimal value) => ctx.Writer.Write(value);
+        public static void Write(WriteContext ctx, decimal value) => ctx.Writer.Write(value);
 
         /// <summary>
         /// Write a length-prefixed byte array to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteByteArray(WriteContext ctx, byte[] array)
+        public static void Write(WriteContext ctx, byte[] array)
         {
             ctx.Writer.Write((int)array.Length);
             ctx.Writer.Write(array);
@@ -839,7 +839,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteCharArray(WriteContext ctx, char[] array)
+        public static void Write(WriteContext ctx, char[] array)
         {
             ctx.Writer.Write((int)array.Length);
             ctx.Writer.Write(array);
@@ -850,13 +850,13 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteBooleanArray(WriteContext ctx, bool[] array)
+        public static void Write(WriteContext ctx, bool[] array)
         {
             ctx.Writer.Write((int)array.Length);
 
             foreach (var value in array)
             {
-                WriteBoolean(ctx, value);
+                Write(ctx, value);
             }
         }
 
@@ -865,20 +865,20 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="value"></param>
-        public static void WriteString(Saveable.WriteContext ctx, string value) => WriteByteArray(ctx, Encoding.UTF8.GetBytes(value));
+        public static void Write(WriteContext ctx, string value) => Write(ctx, Encoding.UTF8.GetBytes(value));
 
         /// <summary>
         /// Write a length-prefixed array of length-prefixed strings to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteStringArray(WriteContext ctx, string[] array)
+        public static void Write(WriteContext ctx, string[] array)
         {
             ctx.Writer.Write((int)array.Length);
 
             foreach (var value in array)
             {
-                WriteString(ctx, value);
+                Write(ctx, value);
             }
         }
 
@@ -887,7 +887,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteInt16Array(WriteContext ctx, short[] array)
+        public static void Write(WriteContext ctx, short[] array)
         {
             ctx.Writer.Write((int)array.Length);
 
@@ -902,7 +902,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteUInt16Array(WriteContext ctx, ushort[] array)
+        public static void Write(WriteContext ctx, ushort[] array)
         {
             ctx.Writer.Write((int)array.Length);
 
@@ -917,7 +917,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteInt32Array(WriteContext ctx, int[] array)
+        public static void Write(WriteContext ctx, int[] array)
         {
             ctx.Writer.Write((int)array.Length);
 
@@ -932,7 +932,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteUInt32Array(WriteContext ctx, uint[] array)
+        public static void Write(WriteContext ctx, uint[] array)
         {
             ctx.Writer.Write((uint)array.Length);
 
@@ -947,7 +947,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteInt64Array(WriteContext ctx, long[] array)
+        public static void Write(WriteContext ctx, long[] array)
         {
             ctx.Writer.Write((int)array.Length);
 
@@ -962,7 +962,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteUInt64Array(WriteContext ctx, ulong[] array)
+        public static void Write(WriteContext ctx, ulong[] array)
         {
             ctx.Writer.Write((uint)array.Length);
 
@@ -977,7 +977,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteDoubleArray(WriteContext ctx, double[] array)
+        public static void Write(WriteContext ctx, double[] array)
         {
             ctx.Writer.Write((uint)array.Length);
 
@@ -992,7 +992,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteFloatArray(WriteContext ctx, float[] array)
+        public static void Write(WriteContext ctx, float[] array)
         {
             ctx.Writer.Write((uint)array.Length);
 
@@ -1007,7 +1007,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="array"></param>
-        public static void WriteDecimalArray(WriteContext ctx, decimal[] array)
+        public static void Write(WriteContext ctx, decimal[] array)
         {
             ctx.Writer.Write((uint)array.Length);
 
@@ -1041,43 +1041,43 @@ namespace SaveableNET
                 switch (Type.GetTypeCode(elementType))
                 {
                     case TypeCode.Byte:
-                        WriteByteArray(ctx, (byte[])value);
+                        Write(ctx, (byte[])value);
                         return;
                     case TypeCode.Char:
-                        WriteCharArray(ctx, (char[])value);
+                        Write(ctx, (char[])value);
                         return;
                     case TypeCode.Boolean:
-                        WriteBooleanArray(ctx, (bool[])value);
+                        Write(ctx, (bool[])value);
                         return;
                     case TypeCode.String:
-                        WriteStringArray(ctx, (string[])value);
+                        Write(ctx, (string[])value);
                         return;
                     case TypeCode.Int16:
-                        WriteInt16Array(ctx, (short[])value);
+                        Write(ctx, (short[])value);
                         return;
                     case TypeCode.UInt16:
-                        WriteUInt16Array(ctx, (ushort[])value);
+                        Write(ctx, (ushort[])value);
                         return;
                     case TypeCode.Int32:
-                        WriteInt32Array(ctx, (int[])value);
+                        Write(ctx, (int[])value);
                         return;
                     case TypeCode.UInt32:
-                        WriteUInt32Array(ctx, (uint[])value);
+                        Write(ctx, (uint[])value);
                         return;
                     case TypeCode.Int64:
-                        WriteInt64Array(ctx, (long[])value);
+                        Write(ctx, (long[])value);
                         return;
                     case TypeCode.UInt64:
-                        WriteUInt64Array(ctx, (ulong[])value);
+                        Write(ctx, (ulong[])value);
                         return;
                     case TypeCode.Double:
-                        WriteDoubleArray(ctx, (double[])value);
+                        Write(ctx, (double[])value);
                         return;
                     case TypeCode.Single:
-                        WriteFloatArray(ctx, (float[])value);
+                        Write(ctx, (float[])value);
                         return;
                     case TypeCode.Decimal:
-                        WriteDecimalArray(ctx, (decimal[])value);
+                        Write(ctx, (decimal[])value);
                         return;
                 }
 
@@ -1096,43 +1096,43 @@ namespace SaveableNET
                 switch (Type.GetTypeCode(type))
                 {
                     case TypeCode.Byte:
-                        WriteByte(ctx, (byte)value);
+                        Write(ctx, (byte)value);
                         return;
                     case TypeCode.Char:
-                        WriteChar(ctx, (char)value);
+                        Write(ctx, (char)value);
                         return;
                     case TypeCode.Boolean:
-                        WriteBoolean(ctx, (bool)value);
+                        Write(ctx, (bool)value);
                         return;
                     case TypeCode.String:
-                        WriteString(ctx, (string)value);
+                        Write(ctx, (string)value);
                         return;
                     case TypeCode.Int16:
-                        WriteInt16(ctx, (short)value);
+                        Write(ctx, (short)value);
                         return;
                     case TypeCode.UInt16:
-                        WriteUInt16(ctx, (ushort)value);
+                        Write(ctx, (ushort)value);
                         return;
                     case TypeCode.Int32:
-                        WriteInt32(ctx, (int)value);
+                        Write(ctx, (int)value);
                         return;
                     case TypeCode.UInt32:
-                        WriteUInt32(ctx, (uint)value);
+                        Write(ctx, (uint)value);
                         return;
                     case TypeCode.Int64:
-                        WriteInt64(ctx, (long)value);
+                        Write(ctx, (long)value);
                         return;
                     case TypeCode.UInt64:
-                        WriteUInt64(ctx, (ulong)value);
+                        Write(ctx, (ulong)value);
                         return;
                     case TypeCode.Double:
-                        WriteDouble(ctx, (double)value);
+                        Write(ctx, (double)value);
                         return;
                     case TypeCode.Single:
-                        WriteFloat(ctx, (float)value);
+                        Write(ctx, (float)value);
                         return;
                     case TypeCode.Decimal:
-                        WriteDecimal(ctx, (decimal)value);
+                        Write(ctx, (decimal)value);
                         return;
                 }
 
