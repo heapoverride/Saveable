@@ -12,8 +12,6 @@ class Person : Saveable
 
     [Saveable]
     public int Age { get; set; }
-
-    public Person() {}
 }
 ```
 
@@ -27,8 +25,6 @@ class Person : Saveable
     public string Name;
     public int Age;
 
-    public Person() {}
-
     protected override Read(ReadContext ctx) 
     {
         Name = ReadString(ctx);
@@ -37,8 +33,8 @@ class Person : Saveable
 
     protected override Write(WriteContext ctx) 
     {
-        WriteString(ctx, Name);
-        WriteInt32(ctx, Age);
+        Write(ctx, Name);
+        Write(ctx, Age);
     }
 }
 ```

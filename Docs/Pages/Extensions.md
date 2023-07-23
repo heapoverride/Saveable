@@ -22,7 +22,7 @@ namespace SaveableNET
         /// <typeparam name="TValue"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>(ReadContext ctx)
+        public static Dictionary<TKey, TValue> Read<TKey, TValue>(ReadContext ctx)
         {
             var dict = new Dictionary<TKey, TValue>();
 
@@ -45,10 +45,10 @@ namespace SaveableNET
         /// <typeparam name="TValue"></typeparam>
         /// <param name="ctx"></param>
         /// <param name="dict"></param>
-        public static void WriteDictionary<TKey, TValue>(WriteContext ctx, Dictionary<TKey, TValue> dict)
+        public static void Write<TKey, TValue>(WriteContext ctx, Dictionary<TKey, TValue> dict)
         {
             // Write number of key/value pairs
-            WriteInt32(ctx, dict.Count);
+            Write(ctx, dict.Count);
 
             foreach (var pair in dict)
             {

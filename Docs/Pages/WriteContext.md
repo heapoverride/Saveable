@@ -10,5 +10,5 @@ var stream = File.Open("Strings.bin", FileMode.Create, FileAccess.Write);
 var ctx = new Saveable.WriteContext(stream);
 
 // Write a string
-Saveable.WriteString(ctx, "Hello, world!");
+Saveable.Write(ctx, "Hello, world!");
 ```
