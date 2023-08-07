@@ -13,7 +13,7 @@ using SaveableNET;
 /// Represents an encrypted wrapper for <see cref="TSaveable"/> object
 /// </summary>
 /// <typeparam name="TSaveable"></typeparam>
-internal class Encrypted<TSaveable> : Saveable where TSaveable : Saveable
+internal class Encrypted<TSaveable> : Saveable where TSaveable : Saveable, new()
 {
     private TSaveable value;
 
@@ -58,7 +58,10 @@ internal class Encrypted<TSaveable> : Saveable where TSaveable : Saveable
     /// <summary>
     /// Instantiate new encrypted <see cref="Saveable"/> object
     /// </summary>
-    public Encrypted() { }
+    public Encrypted()
+    {
+        value = new TSaveable();
+    }
 
     protected override void Read(ReadContext ctx)
     {
