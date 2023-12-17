@@ -24,8 +24,8 @@
 		<Authors>unrealsec</Authors>
 		<Company>Unreal Security</Company>
 		<Description>Easy to use class library for reading/writing objects from/to binary streams.</Description>
-		<PackageProjectUrl>https://github.com/UnrealSecurity/Saveable</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/UnrealSecurity/Saveable</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/heapoverride/Saveable</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/heapoverride/Saveable</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>serialization;binary-data;deserialization;write;serialization-library;c-sharp-library</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>

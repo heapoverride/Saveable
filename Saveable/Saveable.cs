@@ -46,6 +46,37 @@ namespace SaveableNET
         }
 
         /// <summary>
+        /// Read a <see cref="Saveable"/> from <see cref="Stream"/>
+        /// </summary>
+        /// <param name="stream"></param>
+        public void ReadFrom(Stream stream)
+        {
+            // Create read context
+            using (var ctx = new ReadContext(stream, true))
+            {
+                ReadFrom(ctx);
+            }
+        }
+
+        /// <summary>
+        /// Read a <see cref="Saveable"/> from <see cref="ReadContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void ReadFrom(ReadContext ctx)
+        {
+            // Update position
+            if (ctx.Stream.CanSeek)
+                position = ctx.Stream.Position;
+
+            // Read saveable
+            Read(ctx);
+
+            // Update length
+            if (ctx.Stream.CanSeek)
+                length = ctx.Stream.Position - position;
+        }
+
+        /// <summary>
         /// Write a <see cref="Saveable"/> to <see cref="WriteContext"/>
         /// </summary>
         /// <param name="ctx"></param>
@@ -65,6 +96,36 @@ namespace SaveableNET
                 // Get and write value
                 WriteValue(ctx, prop.GetValue(this));
             }
+        }
+
+        /// <summary>
+        /// Write a <see cref="Saveable"/> to <see cref="Stream"/>
+        /// </summary>
+        /// <param name="stream"></param>
+        public void WriteTo(Stream stream)
+        {
+            using (var ctx = new WriteContext(stream, true))
+            {
+                WriteTo(ctx);
+            }
+        }
+
+        /// <summary>
+        /// Write a <see cref="Saveable"/> to <see cref="WriteContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        public void WriteTo(WriteContext ctx)
+        {
+            // Update position
+            if (ctx.Stream.CanSeek)
+                position = ctx.Stream.Position;
+
+            // Write saveable
+            Write(ctx);
+
+            // Update length
+            if (ctx.Stream.CanSeek)
+                length = ctx.Stream.Position - position;
         }
 
         /// <summary>
@@ -94,7 +155,7 @@ namespace SaveableNET
         /// <param name="stream"></param>
         /// <typeparam name="TSaveable"></typeparam>
         /// <returns></returns>
-        public static TSaveable Read<TSaveable>(Stream stream) where TSaveable : Saveable
+        public static TSaveable Read<TSaveable>(Stream stream) where TSaveable : Saveable, new()
         {
             // Create read context
             using (var ctx = new ReadContext(stream, true))
@@ -110,9 +171,9 @@ namespace SaveableNET
         /// <typeparam name="TSaveable"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static TSaveable Read<TSaveable>(ReadContext ctx) where TSaveable : Saveable
+        public static TSaveable Read<TSaveable>(ReadContext ctx) where TSaveable : Saveable, new()
         {
-            var saveable = Activator.CreateInstance<TSaveable>();
+            var saveable = new TSaveable();
 
             // Update position
             if (ctx.Stream.CanSeek)
@@ -134,7 +195,7 @@ namespace SaveableNET
         /// <typeparam name="TSaveable"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static TSaveable Read<TSaveable>(byte[] array) where TSaveable : Saveable
+        public static TSaveable Read<TSaveable>(byte[] array) where TSaveable : Saveable, new()
         {
             using (var stream = new MemoryStream(array))
             {
@@ -148,7 +209,7 @@ namespace SaveableNET
         /// <param name="stream"></param>
         /// <typeparam name="TSaveable"></typeparam>
         /// <returns></returns>
-        public static TSaveable[] ReadArray<TSaveable>(Stream stream) where TSaveable : Saveable
+        public static TSaveable[] ReadArray<TSaveable>(Stream stream) where TSaveable : Saveable, new()
         {
             // Create read context
             using (var ctx = new ReadContext(stream, true))
@@ -164,7 +225,7 @@ namespace SaveableNET
         /// <typeparam name="TSaveable"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static TSaveable[] ReadArray<TSaveable>(ReadContext ctx) where TSaveable : Saveable
+        public static TSaveable[] ReadArray<TSaveable>(ReadContext ctx) where TSaveable : Saveable, new()
         {
             var array = new TSaveable[ctx.Reader.ReadInt32()];
 
@@ -182,7 +243,7 @@ namespace SaveableNET
         /// <typeparam name="TSaveable"></typeparam>
         /// <param name="array"></param>
         /// <returns></returns>
-        public static TSaveable[] ReadArray<TSaveable>(byte[] array) where TSaveable : Saveable
+        public static TSaveable[] ReadArray<TSaveable>(byte[] array) where TSaveable : Saveable, new()
         {
             using (var stream = new MemoryStream(array))
             {
@@ -196,7 +257,7 @@ namespace SaveableNET
         /// <typeparam name="TSaveable"></typeparam>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static IEnumerable<TSaveable> GetEnumerator<TSaveable>(Stream stream) where TSaveable : Saveable
+        public static IEnumerable<TSaveable> GetEnumerator<TSaveable>(Stream stream) where TSaveable : Saveable, new()
         {
             // Create read context
             var ctx = new ReadContext(stream);
@@ -210,7 +271,7 @@ namespace SaveableNET
         /// <typeparam name="TSaveable"></typeparam>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static IEnumerable<TSaveable> GetEnumerator<TSaveable>(ReadContext ctx) where TSaveable : Saveable
+        public static IEnumerable<TSaveable> GetEnumerator<TSaveable>(ReadContext ctx) where TSaveable : Saveable, new()
         {
             int length = ctx.Reader.ReadInt32();
 
