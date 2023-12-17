@@ -59,6 +59,18 @@ namespace SaveableNET
         }
 
         /// <summary>
+        /// Read a <see cref="Saveable"/> from byte array
+        /// </summary>
+        /// <param name="stream"></param>
+        public void ReadFrom(byte[] array)
+        {
+            using (var stream = new MemoryStream(array))
+            {
+                ReadFrom(stream);
+            }
+        }
+
+        /// <summary>
         /// Read a <see cref="Saveable"/> from <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
