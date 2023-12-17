@@ -174,18 +174,7 @@ namespace SaveableNET
         public static TSaveable Read<TSaveable>(ReadContext ctx) where TSaveable : Saveable, new()
         {
             var saveable = new TSaveable();
-
-            // Update position
-            if (ctx.Stream.CanSeek)
-                saveable.position = ctx.Stream.Position;
-
-            // Read saveable
-            saveable.Read(ctx);
-
-            // Update length
-            if (ctx.Stream.CanSeek)
-                saveable.length = ctx.Stream.Position - saveable.position;
-
+            saveable.ReadFrom(ctx);
             return saveable;
         }
 
@@ -728,16 +717,7 @@ namespace SaveableNET
         /// <param name="saveable"></param>
         public static void Write(WriteContext ctx, Saveable saveable)
         {
-            // Update position
-            if (ctx.Stream.CanSeek)
-                saveable.position = ctx.Stream.Position;
-
-            // Write saveable
-            saveable.Write(ctx);
-
-            // Update length
-            if (ctx.Stream.CanSeek)
-                saveable.length = ctx.Stream.Position - saveable.position;
+            saveable.WriteTo(ctx);
         }
 
         /// <summary>
@@ -763,7 +743,7 @@ namespace SaveableNET
         public static void Write(WriteContext ctx, Saveable[] array)
         {
             // Write number of saveables
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
 
             // Write saveables
             foreach (var saveable in array)
