@@ -61,7 +61,7 @@ namespace SaveableNET
         /// <summary>
         /// Read a <see cref="Saveable"/> from byte array
         /// </summary>
-        /// <param name="stream"></param>
+        /// <param name="array"></param>
         public void ReadFrom(byte[] array)
         {
             using (var stream = new MemoryStream(array))
@@ -585,6 +585,57 @@ namespace SaveableNET
         }
 
         /// <summary>
+        /// Read a <see cref="Dictionary{TKey, TValue}"/> from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>(ReadContext ctx)
+        {
+            var dict = new Dictionary<TKey, TValue>();
+
+            var length = ReadInt32(ctx);
+
+            for (int i = 0; i < length; i++)
+            {
+                dict.Add(ReadValue<TKey>(ctx), ReadValue<TValue>(ctx));
+            }
+
+            return dict;
+        }
+
+        /// <summary>
+        /// Read a <see cref="Tuple{T1, T2}"/> from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static Tuple<T1, T2> ReadTuple<T1, T2>(ReadContext ctx) => new Tuple<T1, T2>(ReadValue<T1>(ctx), ReadValue<T2>(ctx));
+
+        /// <summary>
+        /// Read a <see cref="Tuple{T1, T2, T3}"/> from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static Tuple<T1, T2, T3> ReadTuple<T1, T2, T3>(ReadContext ctx) => new Tuple<T1, T2, T3>(ReadValue<T1>(ctx), ReadValue<T2>(ctx), ReadValue<T3>(ctx));
+
+        /// <summary>
+        /// Read a <see cref="Tuple{T1, T2, T3}"/> from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static Tuple<T1, T2, T3, T4> ReadTuple<T1, T2, T3, T4>(ReadContext ctx) => new Tuple<T1, T2, T3, T4>(ReadValue<T1>(ctx), ReadValue<T2>(ctx), ReadValue<T3>(ctx), ReadValue<T4>(ctx));
+
+        /// <summary>
         /// Read a value from <see cref="ReadContext"/>
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
@@ -883,7 +934,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, byte[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
             ctx.Writer.Write(array);
         }
 
@@ -894,7 +945,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, char[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
             ctx.Writer.Write(array);
         }
 
@@ -905,7 +956,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, bool[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -927,7 +978,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, string[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -942,7 +993,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, short[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -957,7 +1008,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, ushort[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -972,7 +1023,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, int[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -987,7 +1038,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, uint[] array)
         {
-            ctx.Writer.Write((uint)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -1002,7 +1053,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, long[] array)
         {
-            ctx.Writer.Write((int)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -1017,7 +1068,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, ulong[] array)
         {
-            ctx.Writer.Write((uint)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -1032,7 +1083,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, double[] array)
         {
-            ctx.Writer.Write((uint)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -1047,7 +1098,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, float[] array)
         {
-            ctx.Writer.Write((uint)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
@@ -1062,12 +1113,75 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, decimal[] array)
         {
-            ctx.Writer.Write((uint)array.Length);
+            ctx.Writer.Write(array.Length);
 
             foreach (var value in array)
             {
                 ctx.Writer.Write(value);
             }
+        }
+
+        /// <summary>
+        /// Write a <see cref="Dictionary{TKey, TValue}"/> to <see cref="WriteContext"/>
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="ctx"></param>
+        /// <param name="dict"></param>
+        public static void Write<TKey, TValue>(WriteContext ctx, Dictionary<TKey, TValue> dict)
+        {
+            Write(ctx, dict.Count);
+
+            foreach (var pair in dict)
+            {
+                WriteValue(ctx, pair.Key);
+                WriteValue(ctx, pair.Value);
+            }
+        }
+
+        /// <summary>
+        /// Write a <see cref="Tuple{T1, T2}"/> to <see cref="WriteContext"/>
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <param name="ctx"></param>
+        /// <param name="tuple"></param>
+        public static void Write<T1, T2>(WriteContext ctx, Tuple<T1, T2> tuple)
+        {
+            WriteValue(ctx, tuple.Item1);
+            WriteValue(ctx, tuple.Item2);
+        }
+
+        /// <summary>
+        /// Write a <see cref="Tuple{T1, T2, T3}"/> to <see cref="WriteContext"/>
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <param name="ctx"></param>
+        /// <param name="tuple"></param>
+        public static void Write<T1, T2, T3>(WriteContext ctx, Tuple<T1, T2, T3> tuple)
+        {
+            WriteValue(ctx, tuple.Item1);
+            WriteValue(ctx, tuple.Item2);
+            WriteValue(ctx, tuple.Item3);
+        }
+
+        /// <summary>
+        /// Write a <see cref="Tuple{T1, T2, T3, T4}"/> to <see cref="WriteContext"/>
+        /// </summary>
+        /// <typeparam name="T1"></typeparam>
+        /// <typeparam name="T2"></typeparam>
+        /// <typeparam name="T3"></typeparam>
+        /// <typeparam name="T4"></typeparam>
+        /// <param name="ctx"></param>
+        /// <param name="tuple"></param>
+        public static void Write<T1, T2, T3, T4>(WriteContext ctx, Tuple<T1, T2, T3, T4> tuple)
+        {
+            WriteValue(ctx, tuple.Item1);
+            WriteValue(ctx, tuple.Item2);
+            WriteValue(ctx, tuple.Item3);
+            WriteValue(ctx, tuple.Item4);
         }
 
         /// <summary>
