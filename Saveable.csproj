@@ -10,7 +10,7 @@
 		<OutputPath>bin\$(Configuration)\$(TargetFramework)\$(Platform)\</OutputPath>
 		<AssemblyName>Saveable</AssemblyName>
 		<TargetName>Saveable</TargetName>
-		<AssemblyVersion>2.2.2</AssemblyVersion>
+		<AssemblyVersion>2.2.3</AssemblyVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<RootNamespace>SaveableNET</RootNamespace>
 		<IsPackable>true</IsPackable>
