@@ -666,32 +666,19 @@ namespace SaveableNET
                 // Arrays of primitive data types
                 switch (Type.GetTypeCode(elementType))
                 {
-                    case TypeCode.Byte:
-                        return ReadByteArray(ctx);
-                    case TypeCode.Char:
-                        return ReadCharArray(ctx);
-                    case TypeCode.Boolean:
-                        return ReadBoolArray(ctx);
-                    case TypeCode.String:
-                        return ReadStringArray(ctx);
-                    case TypeCode.Int16:
-                        return ReadInt16Array(ctx);
-                    case TypeCode.UInt16:
-                        return ReadUInt16Array(ctx);
-                    case TypeCode.Int32:
-                        return ReadInt32Array(ctx);
-                    case TypeCode.UInt32:
-                        return ReadUInt32Array(ctx);
-                    case TypeCode.Int64:
-                        return ReadInt64Array(ctx);
-                    case TypeCode.UInt64:
-                        return ReadUInt64Array(ctx);
-                    case TypeCode.Double:
-                        return ReadDoubleArray(ctx);
-                    case TypeCode.Single:
-                        return ReadFloatArray(ctx);
-                    case TypeCode.Decimal:
-                        return ReadDecimalArray(ctx);
+                    case TypeCode.Byte:    return ReadByteArray(ctx);
+                    case TypeCode.Char:    return ReadCharArray(ctx);
+                    case TypeCode.Boolean: return ReadBoolArray(ctx);
+                    case TypeCode.String:  return ReadStringArray(ctx);
+                    case TypeCode.Int16:   return ReadInt16Array(ctx);
+                    case TypeCode.UInt16:  return ReadUInt16Array(ctx);
+                    case TypeCode.Int32:   return ReadInt32Array(ctx);
+                    case TypeCode.UInt32:  return ReadUInt32Array(ctx);
+                    case TypeCode.Int64:   return ReadInt64Array(ctx);
+                    case TypeCode.UInt64:  return ReadUInt64Array(ctx);
+                    case TypeCode.Double:  return ReadDoubleArray(ctx);
+                    case TypeCode.Single:  return ReadFloatArray(ctx);
+                    case TypeCode.Decimal: return ReadDecimalArray(ctx);
                 }
 
                 // Saveable type
@@ -717,32 +704,19 @@ namespace SaveableNET
                 // Primitive data types
                 switch (Type.GetTypeCode(type))
                 {
-                    case TypeCode.Byte:
-                        return ReadByte(ctx);
-                    case TypeCode.Char:
-                        return ReadChar(ctx);
-                    case TypeCode.Boolean:
-                        return ReadBool(ctx);
-                    case TypeCode.String:
-                        return ReadString(ctx);
-                    case TypeCode.Int16:
-                        return ReadInt16(ctx);
-                    case TypeCode.UInt16:
-                        return ReadUInt16(ctx);
-                    case TypeCode.Int32:
-                        return ReadInt32(ctx);
-                    case TypeCode.UInt32:
-                        return ReadUInt32(ctx);
-                    case TypeCode.Int64:
-                        return ReadInt64(ctx);
-                    case TypeCode.UInt64:
-                        return ReadUInt64(ctx);
-                    case TypeCode.Double:
-                        return ReadDouble(ctx);
-                    case TypeCode.Single:
-                        return ReadFloat(ctx);
-                    case TypeCode.Decimal:
-                        return ReadDecimal(ctx);
+                    case TypeCode.Byte:    return ReadByte(ctx);
+                    case TypeCode.Char:    return ReadChar(ctx);
+                    case TypeCode.Boolean: return ReadBool(ctx);
+                    case TypeCode.String:  return ReadString(ctx);
+                    case TypeCode.Int16:   return ReadInt16(ctx);
+                    case TypeCode.UInt16:  return ReadUInt16(ctx);
+                    case TypeCode.Int32:   return ReadInt32(ctx);
+                    case TypeCode.UInt32:  return ReadUInt32(ctx);
+                    case TypeCode.Int64:   return ReadInt64(ctx);
+                    case TypeCode.UInt64:  return ReadUInt64(ctx);
+                    case TypeCode.Double:  return ReadDouble(ctx);
+                    case TypeCode.Single:  return ReadFloat(ctx);
+                    case TypeCode.Decimal: return ReadDecimal(ctx);
                 }
 
                 // Saveable type
@@ -1207,45 +1181,19 @@ namespace SaveableNET
                 // Arrays of primitive data types
                 switch (Type.GetTypeCode(elementType))
                 {
-                    case TypeCode.Byte:
-                        Write(ctx, (byte[])value);
-                        return;
-                    case TypeCode.Char:
-                        Write(ctx, (char[])value);
-                        return;
-                    case TypeCode.Boolean:
-                        Write(ctx, (bool[])value);
-                        return;
-                    case TypeCode.String:
-                        Write(ctx, (string[])value);
-                        return;
-                    case TypeCode.Int16:
-                        Write(ctx, (short[])value);
-                        return;
-                    case TypeCode.UInt16:
-                        Write(ctx, (ushort[])value);
-                        return;
-                    case TypeCode.Int32:
-                        Write(ctx, (int[])value);
-                        return;
-                    case TypeCode.UInt32:
-                        Write(ctx, (uint[])value);
-                        return;
-                    case TypeCode.Int64:
-                        Write(ctx, (long[])value);
-                        return;
-                    case TypeCode.UInt64:
-                        Write(ctx, (ulong[])value);
-                        return;
-                    case TypeCode.Double:
-                        Write(ctx, (double[])value);
-                        return;
-                    case TypeCode.Single:
-                        Write(ctx, (float[])value);
-                        return;
-                    case TypeCode.Decimal:
-                        Write(ctx, (decimal[])value);
-                        return;
+                    case TypeCode.Byte:    Write(ctx, (byte[])value);    return;
+                    case TypeCode.Char:    Write(ctx, (char[])value);    return;
+                    case TypeCode.Boolean: Write(ctx, (bool[])value);    return;
+                    case TypeCode.String:  Write(ctx, (string[])value);  return;
+                    case TypeCode.Int16:   Write(ctx, (short[])value);   return;
+                    case TypeCode.UInt16:  Write(ctx, (ushort[])value);  return;
+                    case TypeCode.Int32:   Write(ctx, (int[])value);     return;
+                    case TypeCode.UInt32:  Write(ctx, (uint[])value);    return;
+                    case TypeCode.Int64:   Write(ctx, (long[])value);    return;
+                    case TypeCode.UInt64:  Write(ctx, (ulong[])value);   return;
+                    case TypeCode.Double:  Write(ctx, (double[])value);  return;
+                    case TypeCode.Single:  Write(ctx, (float[])value);   return;
+                    case TypeCode.Decimal: Write(ctx, (decimal[])value); return;
                 }
 
                 // Saveable type
@@ -1262,45 +1210,19 @@ namespace SaveableNET
                 // Primitive data types
                 switch (Type.GetTypeCode(type))
                 {
-                    case TypeCode.Byte:
-                        Write(ctx, (byte)value);
-                        return;
-                    case TypeCode.Char:
-                        Write(ctx, (char)value);
-                        return;
-                    case TypeCode.Boolean:
-                        Write(ctx, (bool)value);
-                        return;
-                    case TypeCode.String:
-                        Write(ctx, (string)value);
-                        return;
-                    case TypeCode.Int16:
-                        Write(ctx, (short)value);
-                        return;
-                    case TypeCode.UInt16:
-                        Write(ctx, (ushort)value);
-                        return;
-                    case TypeCode.Int32:
-                        Write(ctx, (int)value);
-                        return;
-                    case TypeCode.UInt32:
-                        Write(ctx, (uint)value);
-                        return;
-                    case TypeCode.Int64:
-                        Write(ctx, (long)value);
-                        return;
-                    case TypeCode.UInt64:
-                        Write(ctx, (ulong)value);
-                        return;
-                    case TypeCode.Double:
-                        Write(ctx, (double)value);
-                        return;
-                    case TypeCode.Single:
-                        Write(ctx, (float)value);
-                        return;
-                    case TypeCode.Decimal:
-                        Write(ctx, (decimal)value);
-                        return;
+                    case TypeCode.Byte:    Write(ctx, (byte)value);    return;
+                    case TypeCode.Char:    Write(ctx, (char)value);    return;
+                    case TypeCode.Boolean: Write(ctx, (bool)value);    return;
+                    case TypeCode.String:  Write(ctx, (string)value);  return;
+                    case TypeCode.Int16:   Write(ctx, (short)value);   return;
+                    case TypeCode.UInt16:  Write(ctx, (ushort)value);  return;
+                    case TypeCode.Int32:   Write(ctx, (int)value);     return;
+                    case TypeCode.UInt32:  Write(ctx, (uint)value);    return;
+                    case TypeCode.Int64:   Write(ctx, (long)value);    return;
+                    case TypeCode.UInt64:  Write(ctx, (ulong)value);   return;
+                    case TypeCode.Double:  Write(ctx, (double)value);  return;
+                    case TypeCode.Single:  Write(ctx, (float)value);   return;
+                    case TypeCode.Decimal: Write(ctx, (decimal)value); return;
                 }
 
                 // Saveable type
