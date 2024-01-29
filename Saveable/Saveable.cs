@@ -1285,5 +1285,61 @@ namespace SaveableNET
                 WriteValue(ctx, value);
             }
         }
+
+        /// <summary>
+        /// Get read method for given type
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        private static Func<ReadContext, TValue> GetReadMethod<TValue>() where TValue : class
+        {
+            switch (Type.GetTypeCode(typeof(TValue)))
+            {
+                case TypeCode.Byte:    return ctx => ReadByte(ctx) as TValue;
+                case TypeCode.Char:    return ctx => ReadChar(ctx) as TValue;
+                case TypeCode.Boolean: return ctx => ReadBool(ctx) as TValue;
+                case TypeCode.String:  return ctx => ReadString(ctx) as TValue;
+                case TypeCode.Int16:   return ctx => ReadInt16(ctx) as TValue;
+                case TypeCode.UInt16:  return ctx => ReadUInt16(ctx) as TValue;
+                case TypeCode.Int32:   return ctx => ReadInt32(ctx) as TValue;
+                case TypeCode.UInt32:  return ctx => ReadUInt32(ctx) as TValue;
+                case TypeCode.Int64:   return ctx => ReadInt64(ctx) as TValue;
+                case TypeCode.UInt64:  return ctx => ReadUInt64(ctx) as TValue;
+                case TypeCode.Double:  return ctx => ReadDouble(ctx) as TValue;
+                case TypeCode.Single:  return ctx => ReadFloat(ctx) as TValue;
+                case TypeCode.Decimal: return ctx => ReadDecimal(ctx) as TValue;
+            }
+
+            throw new NotSupportedException($"Type {typeof(TValue)} is not supported.");
+        }
+
+        /// <summary>
+        /// Get write method for given type
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        private static Action<WriteContext, object> GetWriteMethod<TValue>()
+        {
+            switch (Type.GetTypeCode(typeof(TValue)))
+            {
+                case TypeCode.Byte:    return (ctx, value) => Write(ctx, (byte)value);
+                case TypeCode.Char:    return (ctx, value) => Write(ctx, (char)value);
+                case TypeCode.Boolean: return (ctx, value) => Write(ctx, (bool)value);
+                case TypeCode.String:  return (ctx, value) => Write(ctx, (string)value);
+                case TypeCode.Int16:   return (ctx, value) => Write(ctx, (short)value);
+                case TypeCode.UInt16:  return (ctx, value) => Write(ctx, (ushort)value);
+                case TypeCode.Int32:   return (ctx, value) => Write(ctx, (int)value);
+                case TypeCode.UInt32:  return (ctx, value) => Write(ctx, (uint)value);
+                case TypeCode.Int64:   return (ctx, value) => Write(ctx, (long)value);
+                case TypeCode.UInt64:  return (ctx, value) => Write(ctx, (ulong)value);
+                case TypeCode.Double:  return (ctx, value) => Write(ctx, (double)value);
+                case TypeCode.Single:  return (ctx, value) => Write(ctx, (float)value);
+                case TypeCode.Decimal: return (ctx, value) => Write(ctx, (decimal)value);
+            }
+
+            throw new NotSupportedException($"Type {typeof(TValue)} is not supported.");
+        }
     }
 }
