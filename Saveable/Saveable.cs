@@ -597,9 +597,12 @@ namespace SaveableNET
 
             var length = ReadInt32(ctx);
 
+            var readKey = ResolveReadMethod<TKey>();
+            var readValue = ResolveReadMethod<TValue>();
+
             for (int i = 0; i < length; i++)
             {
-                dict.Add(ReadValue<TKey>(ctx), ReadValue<TValue>(ctx));
+                dict.Add(readKey(ctx), readValue(ctx));
             }
 
             return dict;
@@ -750,9 +753,11 @@ namespace SaveableNET
         {
             var array = new TValue[ReadInt32(ctx)];
 
+            var readValue = ResolveReadMethod<TValue>();
+
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ReadValue<TValue>(ctx);
+                array[i] = readValue(ctx);
             }
 
             return array;
@@ -1132,10 +1137,13 @@ namespace SaveableNET
         {
             Write(ctx, dict.Count);
 
+            var writeKey = ResolveWriteMethod<TKey>();
+            var writeValue = ResolveWriteMethod<TValue>();
+
             foreach (var pair in dict)
             {
-                WriteValue(ctx, pair.Key);
-                WriteValue(ctx, pair.Value);
+                writeKey(ctx, pair.Key);
+                writeValue(ctx, pair.Value);
             }
         }
 
@@ -1279,10 +1287,12 @@ namespace SaveableNET
         public static void WriteValueArray<TValue>(WriteContext ctx, TValue[] array)
         {
             Write(ctx, array.Length);
+
+            var write = ResolveWriteMethod<TValue>();
             
             foreach (var value in array)
             {
-                WriteValue(ctx, value);
+                write(ctx, value);
             }
         }
 
@@ -1292,24 +1302,33 @@ namespace SaveableNET
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        private static Func<ReadContext, TValue> GetReadMethod<TValue>() where TValue : class
+        private static Func<ReadContext, TValue> ResolveReadMethod<TValue>()
         {
-            switch (Type.GetTypeCode(typeof(TValue)))
+            var type = typeof(TValue);
+
+            switch (Type.GetTypeCode(type))
             {
-                case TypeCode.Byte:    return ctx => ReadByte(ctx) as TValue;
-                case TypeCode.Char:    return ctx => ReadChar(ctx) as TValue;
-                case TypeCode.Boolean: return ctx => ReadBool(ctx) as TValue;
-                case TypeCode.String:  return ctx => ReadString(ctx) as TValue;
-                case TypeCode.Int16:   return ctx => ReadInt16(ctx) as TValue;
-                case TypeCode.UInt16:  return ctx => ReadUInt16(ctx) as TValue;
-                case TypeCode.Int32:   return ctx => ReadInt32(ctx) as TValue;
-                case TypeCode.UInt32:  return ctx => ReadUInt32(ctx) as TValue;
-                case TypeCode.Int64:   return ctx => ReadInt64(ctx) as TValue;
-                case TypeCode.UInt64:  return ctx => ReadUInt64(ctx) as TValue;
-                case TypeCode.Double:  return ctx => ReadDouble(ctx) as TValue;
-                case TypeCode.Single:  return ctx => ReadFloat(ctx) as TValue;
-                case TypeCode.Decimal: return ctx => ReadDecimal(ctx) as TValue;
+                case TypeCode.Byte:    return ctx => (TValue)(object)ReadByte(ctx);
+                case TypeCode.Char:    return ctx => (TValue)(object)ReadChar(ctx);
+                case TypeCode.Boolean: return ctx => (TValue)(object)ReadBool(ctx);
+                case TypeCode.String:  return ctx => (TValue)(object)ReadString(ctx);
+                case TypeCode.Int16:   return ctx => (TValue)(object)ReadInt16(ctx);
+                case TypeCode.UInt16:  return ctx => (TValue)(object)ReadUInt16(ctx);
+                case TypeCode.Int32:   return ctx => (TValue)(object)ReadInt32(ctx);
+                case TypeCode.UInt32:  return ctx => (TValue)(object)ReadUInt32(ctx);
+                case TypeCode.Int64:   return ctx => (TValue)(object)ReadInt64(ctx);
+                case TypeCode.UInt64:  return ctx => (TValue)(object)ReadUInt64(ctx);
+                case TypeCode.Double:  return ctx => (TValue)(object)ReadDouble(ctx);
+                case TypeCode.Single:  return ctx => (TValue)(object)ReadFloat(ctx);
+                case TypeCode.Decimal: return ctx => (TValue)(object)ReadDecimal(ctx);
             }
+
+            if (typeof(Saveable).IsAssignableFrom(type))
+                return ctx => {
+                    var value = Activator.CreateInstance<TValue>();
+                    (value as Saveable).Read(ctx);
+                    return value;
+                };
 
             throw new NotSupportedException($"Type {typeof(TValue)} is not supported.");
         }
@@ -1320,9 +1339,11 @@ namespace SaveableNET
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        private static Action<WriteContext, object> GetWriteMethod<TValue>()
+        private static Action<WriteContext, object> ResolveWriteMethod<TValue>()
         {
-            switch (Type.GetTypeCode(typeof(TValue)))
+            var type = typeof(TValue);
+
+            switch (Type.GetTypeCode(type))
             {
                 case TypeCode.Byte:    return (ctx, value) => Write(ctx, (byte)value);
                 case TypeCode.Char:    return (ctx, value) => Write(ctx, (char)value);
@@ -1338,6 +1359,9 @@ namespace SaveableNET
                 case TypeCode.Single:  return (ctx, value) => Write(ctx, (float)value);
                 case TypeCode.Decimal: return (ctx, value) => Write(ctx, (decimal)value);
             }
+
+            if (typeof(Saveable).IsAssignableFrom(type))
+                return (ctx, value) => Write(ctx, (Saveable)value);
 
             throw new NotSupportedException($"Type {typeof(TValue)} is not supported.");
         }
