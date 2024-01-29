@@ -228,7 +228,7 @@ namespace SaveableNET
         /// <returns></returns>
         public static TSaveable[] ReadArray<TSaveable>(ReadContext ctx) where TSaveable : Saveable, new()
         {
-            var array = new TSaveable[ctx.Reader.ReadInt32()];
+            var array = new TSaveable[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -274,7 +274,7 @@ namespace SaveableNET
         /// <returns></returns>
         public static IEnumerable<TSaveable> GetEnumerator<TSaveable>(ReadContext ctx) where TSaveable : Saveable, new()
         {
-            int length = ctx.Reader.ReadInt32();
+            int length = ReadInt32(ctx);
 
             for (int i = 0; i < length; i++)
             {
@@ -371,7 +371,7 @@ namespace SaveableNET
         /// </summary>
         /// <param name="ctx"></param>
         /// <returns></returns>
-        public static byte[] ReadByteArray(ReadContext ctx) => ctx.Reader.ReadBytes(ctx.Reader.ReadInt32());
+        public static byte[] ReadByteArray(ReadContext ctx) => ctx.Reader.ReadBytes(ReadInt32(ctx));
 
         /// <summary>
         /// Read a length-prefixed char array from <see cref="ReadContext"/>
@@ -380,11 +380,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static char[] ReadCharArray(ReadContext ctx)
         {
-            var array = new char[ctx.Reader.ReadInt32()];
+            var array = new char[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadChar();
+                array[i] = ReadChar(ctx);
             }
 
             return array;
@@ -397,11 +397,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static bool[] ReadBoolArray(ReadContext ctx)
         {
-            var array = new bool[ctx.Reader.ReadInt32()];
+            var array = new bool[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadBoolean();
+                array[i] = ReadBool(ctx);
             }
 
             return array;
@@ -421,7 +421,7 @@ namespace SaveableNET
         /// <returns></returns>
         public static string[] ReadStringArray(ReadContext ctx)
         {
-            var array = new string[ctx.Reader.ReadInt32()];
+            var array = new string[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -438,11 +438,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static short[] ReadInt16Array(ReadContext ctx)
         {
-            var array = new short[ctx.Reader.ReadInt32()];
+            var array = new short[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadInt16();
+                array[i] = ReadInt16(ctx);
             }
 
             return array;
@@ -455,11 +455,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static ushort[] ReadUInt16Array(ReadContext ctx)
         {
-            var array = new ushort[ctx.Reader.ReadInt32()];
+            var array = new ushort[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadUInt16();
+                array[i] = ReadUInt16(ctx);
             }
 
             return array;
@@ -472,11 +472,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static int[] ReadInt32Array(ReadContext ctx)
         {
-            var array = new int[ctx.Reader.ReadInt32()];
+            var array = new int[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadInt32();
+                array[i] = ReadInt32(ctx);
             }
 
             return array;
@@ -489,11 +489,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static uint[] ReadUInt32Array(ReadContext ctx)
         {
-            var array = new uint[ctx.Reader.ReadInt32()];
+            var array = new uint[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadUInt32();
+                array[i] = ReadUInt32(ctx);
             }
 
             return array;
@@ -506,11 +506,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static long[] ReadInt64Array(ReadContext ctx)
         {
-            var array = new long[ctx.Reader.ReadInt32()];
+            var array = new long[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadInt64();
+                array[i] = ReadInt64(ctx);
             }
 
             return array;
@@ -523,11 +523,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static ulong[] ReadUInt64Array(ReadContext ctx)
         {
-            var array = new ulong[ctx.Reader.ReadInt32()];
+            var array = new ulong[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadUInt64();
+                array[i] = ReadUInt64(ctx);
             }
 
             return array;
@@ -540,11 +540,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static double[] ReadDoubleArray(ReadContext ctx)
         {
-            var array = new double[ctx.Reader.ReadInt32()];
+            var array = new double[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadDouble();
+                array[i] = ReadDouble(ctx);
             }
 
             return array;
@@ -557,11 +557,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static float[] ReadFloatArray(ReadContext ctx)
         {
-            var array = new float[ctx.Reader.ReadInt32()];
+            var array = new float[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadSingle();
+                array[i] = ReadFloat(ctx);
             }
 
             return array;
@@ -574,11 +574,11 @@ namespace SaveableNET
         /// <returns></returns>
         public static decimal[] ReadDecimalArray(ReadContext ctx)
         {
-            var array = new decimal[ctx.Reader.ReadInt32()];
+            var array = new decimal[ReadInt32(ctx)];
 
             for (int i = 0; i < array.Length; i++)
             {
-                array[i] = ctx.Reader.ReadDecimal();
+                array[i] = ReadDecimal(ctx);
             }
 
             return array;
@@ -634,6 +634,14 @@ namespace SaveableNET
         /// <param name="ctx"></param>
         /// <returns></returns>
         public static Tuple<T1, T2, T3, T4> ReadTuple<T1, T2, T3, T4>(ReadContext ctx) => new Tuple<T1, T2, T3, T4>(ReadValue<T1>(ctx), ReadValue<T2>(ctx), ReadValue<T3>(ctx), ReadValue<T4>(ctx));
+
+        /// <summary>
+        /// Read a <see cref="List{T}"/> from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static List<TValue> ReadList<TValue>(ReadContext ctx) => new List<TValue>(ReadValueArray<TValue>(ctx));
 
         /// <summary>
         /// Read a value from <see cref="ReadContext"/>
@@ -733,6 +741,24 @@ namespace SaveableNET
         }
 
         /// <summary>
+        /// Read a length-prefixed array of values from <see cref="ReadContext"/>
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
+        public static TValue[] ReadValueArray<TValue>(ReadContext ctx)
+        {
+            var array = new TValue[ReadInt32(ctx)];
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = ReadValue<TValue>(ctx);
+            }
+
+            return array;
+        }
+
+        /// <summary>
         /// Write a <see cref="Saveable"/> to <see cref="Stream"/>
         /// </summary>
         /// <param name="stream"></param>
@@ -780,7 +806,7 @@ namespace SaveableNET
         public static void Write(WriteContext ctx, Saveable[] array)
         {
             // Write number of saveables
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             // Write saveables
             foreach (var saveable in array)
@@ -908,7 +934,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, byte[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
             ctx.Writer.Write(array);
         }
 
@@ -919,7 +945,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, char[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
             ctx.Writer.Write(array);
         }
 
@@ -930,7 +956,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, bool[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
@@ -952,7 +978,7 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, string[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
@@ -967,11 +993,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, short[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -982,11 +1008,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, ushort[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -997,11 +1023,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, int[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -1012,11 +1038,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, uint[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -1027,11 +1053,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, long[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -1042,11 +1068,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, ulong[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -1057,11 +1083,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, double[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -1072,11 +1098,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, float[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -1087,11 +1113,11 @@ namespace SaveableNET
         /// <param name="array"></param>
         public static void Write(WriteContext ctx, decimal[] array)
         {
-            ctx.Writer.Write(array.Length);
+            Write(ctx, array.Length);
 
             foreach (var value in array)
             {
-                ctx.Writer.Write(value);
+                Write(ctx, value);
             }
         }
 
@@ -1157,6 +1183,14 @@ namespace SaveableNET
             WriteValue(ctx, tuple.Item3);
             WriteValue(ctx, tuple.Item4);
         }
+
+        /// <summary>
+        /// Write a <see cref="List{T}"/> to <see cref="WriteContext"/>
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="ctx"></param>
+        /// <param name="list"></param>
+        public static void Write<TValue>(WriteContext ctx, List<TValue> list) => WriteValueArray(ctx, list.ToArray());
 
         /// <summary>
         /// Write a value to <see cref="WriteContext"/>
@@ -1234,6 +1268,22 @@ namespace SaveableNET
             }
 
             throw new NotSupportedException($"Type {type} is not supported.");
+        }
+
+        /// <summary>
+        /// Write a length-prefixed array of values to <see cref="WriteContext"/>
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="ctx"></param>
+        /// <param name="array"></param>
+        public static void WriteValueArray<TValue>(WriteContext ctx, TValue[] array)
+        {
+            Write(ctx, array.Length);
+            
+            foreach (var value in array)
+            {
+                WriteValue(ctx, value);
+            }
         }
     }
 }
