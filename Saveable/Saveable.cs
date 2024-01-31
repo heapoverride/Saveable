@@ -597,8 +597,8 @@ namespace SaveableNET
 
             var length = ReadInt32(ctx);
 
-            var readKey = ResolveReadMethod<TKey>();
-            var readValue = ResolveReadMethod<TValue>();
+            var readKey = GetReadMethod<TKey>();
+            var readValue = GetReadMethod<TValue>();
 
             for (int i = 0; i < length; i++)
             {
@@ -753,7 +753,7 @@ namespace SaveableNET
         {
             var array = new TValue[ReadInt32(ctx)];
 
-            var readValue = ResolveReadMethod<TValue>();
+            var readValue = GetReadMethod<TValue>();
 
             for (int i = 0; i < array.Length; i++)
             {
@@ -1137,8 +1137,8 @@ namespace SaveableNET
         {
             Write(ctx, dict.Count);
 
-            var writeKey = ResolveWriteMethod<TKey>();
-            var writeValue = ResolveWriteMethod<TValue>();
+            var writeKey = GetWriteMethod<TKey>();
+            var writeValue = GetWriteMethod<TValue>();
 
             foreach (var pair in dict)
             {
@@ -1288,7 +1288,7 @@ namespace SaveableNET
         {
             Write(ctx, array.Length);
 
-            var write = ResolveWriteMethod<TValue>();
+            var write = GetWriteMethod<TValue>();
             
             foreach (var value in array)
             {
@@ -1297,12 +1297,12 @@ namespace SaveableNET
         }
 
         /// <summary>
-        /// Get read method for given type
+        /// Get a read method for a given supported type
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        private static Func<ReadContext, TValue> ResolveReadMethod<TValue>()
+        public static Func<ReadContext, TValue> GetReadMethod<TValue>()
         {
             var type = typeof(TValue);
 
@@ -1334,12 +1334,12 @@ namespace SaveableNET
         }
 
         /// <summary>
-        /// Get write method for given type
+        /// Get a write method for a given supported type
         /// </summary>
         /// <typeparam name="TValue"></typeparam>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        private static Action<WriteContext, object> ResolveWriteMethod<TValue>()
+        public static Action<WriteContext, object> GetWriteMethod<TValue>()
         {
             var type = typeof(TValue);
 
