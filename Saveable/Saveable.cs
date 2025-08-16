@@ -290,6 +290,14 @@ namespace SaveableNET
         public static byte ReadByte(ReadContext ctx) => ctx.Reader.ReadByte();
 
         /// <summary>
+        /// Read <paramref name="count"/> bytes from <see cref="ReadContext"/>
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public static byte[] ReadBytes(ReadContext ctx, int count) => ctx.Reader.ReadBytes(count);
+
+        /// <summary>
         /// Read a char from <see cref="ReadContext"/>
         /// </summary>
         /// <param name="ctx"></param>
@@ -854,6 +862,14 @@ namespace SaveableNET
         /// <param name="ctx"></param>
         /// <param name="value"></param>
         public static void Write(WriteContext ctx, byte value) => ctx.Writer.Write(value);
+
+        /// <summary>
+        /// Write bytes to <see cref="WriteContext"/> without length-prefix
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static void WriteBytes(WriteContext ctx, byte[] array) => ctx.Writer.Write(array);
 
         /// <summary>
         /// Write a char to <see cref="WriteContext"/>
